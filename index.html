@@ -76,20 +76,6 @@
   .pen-zone .pz-help{font-size:10.5px;line-height:1.45;color:#6b5a2a;margin:0 0 11px}
   .pen-zone .winbtn{background:#fffdf6}
   .pen-zone .winbtn.on{border:2px solid var(--gold-deep);background:#fff;color:#7a5b12}
-  /* penalties highlight — Treatment 2: accent badge + bold question */
-  .pen-badge .pb-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
-  .pen-badge .pb-pill{display:inline-flex;align-items:center;gap:5px;background:var(--gold);color:#3a2d05;font-size:10px;font-weight:900;letter-spacing:.6px;border-radius:20px;padding:4px 10px;text-transform:uppercase}
-  .pen-badge .pb-q{font-size:14px;font-weight:900;color:var(--ink);margin-bottom:9px}
-  .pen-badge .winbtn.on{border:2px solid var(--gold-deep);background:#fffdf2;color:#7a5b12}
-  .pen-badge .pb-caps{display:flex;gap:10px;margin-top:6px}
-  .pen-badge .pb-cap{flex:1;text-align:center;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.3px}
-
-  /* treatment switcher (review control on view A) */
-  .treatswitch{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-  .treatswitch .ts-label{font-size:12px;font-weight:800;color:#3a473f}
-  .ts-pill{border:1px solid var(--chipline);background:#fff;border-radius:9px;padding:6px 12px;font-size:12px;font-weight:800;color:#4a574f;cursor:pointer}
-  .ts-pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .treatswitch .ts-hint{font-size:11px;color:var(--muted)}
   .submit{margin-top:16px;width:100%;background:var(--orange);color:#fff;border:none;text-align:center;font-weight:800;font-size:14px;padding:14px;border-radius:13px;letter-spacing:.5px;cursor:pointer}
   .submit:disabled{background:#d9c3b4;cursor:not-allowed}
   .guard{margin-top:10px;font-size:11.5px;line-height:1.45;color:var(--bad);background:#fdeceb;border:1px solid #f6cfcc;border-radius:10px;padding:9px 11px;display:none}
@@ -153,12 +139,6 @@
 
   <!-- ===================== VIEW A ===================== -->
   <div class="view active" id="view-a">
-    <div class="treatswitch">
-      <span class="ts-label">Penalties highlight:</span>
-      <button class="ts-pill on" id="ts-zone" onclick="setPensStyle('zone')">Treatment 1 · Shootout zone</button>
-      <button class="ts-pill" id="ts-badge" onclick="setPensStyle('badge')">Treatment 2 · Accent badge</button>
-      <span class="ts-hint">— appears on a level score (the default 0–0)</span>
-    </div>
     <div class="split">
       <div class="col-phone">
         <div class="phone">
@@ -243,7 +223,6 @@ const DEFAULTS = {
   a:{h:0, a:0, manner:null, pens:null, actual:2}   // actual index default → 1–1 POR pens
 };
 let S = JSON.parse(JSON.stringify(DEFAULTS));
-let PENS_STYLE = 'zone';   // penalties highlight treatment: 'zone' (default) | 'badge'
 
 const TEAMS = {POR:{flag:'🇵🇹',name:'Portugal',short:'POR',ar:'البرتغال'}, FRA:{flag:'🇫🇷',name:'France',short:'FRA',ar:'فرنسا'}};
 
@@ -318,27 +297,15 @@ function renderA(){
   const T = I18N[LANG];
   const strip = document.getElementById('a-strip');
   if(draw){
-    const btns = `
-      <div class="winsel">
-        <button class="winbtn ${S.a.pens==='POR'?'on':''}" onclick="setPens('POR')"><span class="flag">🇵🇹</span> ${tshort('POR')}</button>
-        <button class="winbtn ${S.a.pens==='FRA'?'on':''}" onclick="setPens('FRA')"><span class="flag">🇫🇷</span> ${tshort('FRA')}</button>
+    strip.innerHTML = `
+      <div class="pen-zone">
+        <div class="pz-head"><span class="pz-ico">⚽</span><span class="pz-title">${T.penTitle}</span></div>
+        <div class="pz-help">${T.penHelp}</div>
+        <div class="winsel">
+          <button class="winbtn ${S.a.pens==='POR'?'on':''}" onclick="setPens('POR')"><span class="flag">🇵🇹</span> ${tshort('POR')}</button>
+          <button class="winbtn ${S.a.pens==='FRA'?'on':''}" onclick="setPens('FRA')"><span class="flag">🇫🇷</span> ${tshort('FRA')}</button>
+        </div>
       </div>`;
-    if(PENS_STYLE==='badge'){
-      strip.innerHTML = `
-        <div class="pen-badge">
-          <div class="pb-row"><span class="pb-pill">⚽ ${T.penBadge}</span></div>
-          <div class="pb-q">${T.penQ}</div>
-          ${btns}
-          <div class="pb-caps"><div class="pb-cap">${T.penCap}</div><div class="pb-cap">${T.penCap}</div></div>
-        </div>`;
-    } else {
-      strip.innerHTML = `
-        <div class="pen-zone">
-          <div class="pz-head"><span class="pz-ico">⚽</span><span class="pz-title">${T.penTitle}</span></div>
-          <div class="pz-help">${T.penHelp}</div>
-          ${btns}
-        </div>`;
-    }
   } else {
     const w = S.a.h>S.a.a?'POR':'FRA';
     const winwhen = LANG==='ar' ? ('فوز '+tname(w)+' — متى؟') : (TEAMS[w].name.toUpperCase()+' WIN — WHEN?');
@@ -400,12 +367,6 @@ function bump(view, side, d){
 function setManner(m){ S.a.manner = (S.a.manner===m?null:m); renderA(); }
 function setPens(t){ S.a.pens = t; renderA(); }
 function setActual(view,i){ S.a.actual=i; renderA(); }
-function setPensStyle(s){
-  PENS_STYLE = s;
-  document.getElementById('ts-zone').classList.toggle('on', s==='zone');
-  document.getElementById('ts-badge').classList.toggle('on', s==='badge');
-  renderA();
-}
 function fakeSubmit(view){
   const btn=document.getElementById(view+'-submit');
   if(btn.disabled) return;
@@ -457,8 +418,7 @@ function applyHash(){
   const h=(location.hash||'').replace('#','');
   if(h==='a-decisive'){ switchView('a'); S.a={h:2,a:1,manner:'FT',pens:null,actual:0}; renderA(); }
   else if(h==='a-edge'){ switchView('a'); S.a={h:2,a:2,manner:null,pens:'POR',actual:2}; renderA(); }
-  else if(h==='a-pen-zone'){ switchView('a'); S.a={h:0,a:0,manner:null,pens:null,actual:2}; setPensStyle('zone'); }
-  else if(h==='a-pen-badge'){ switchView('a'); S.a={h:0,a:0,manner:null,pens:null,actual:2}; setPensStyle('badge'); }
+  else if(h==='a-pen-zone'){ switchView('a'); S.a={h:0,a:0,manner:null,pens:null,actual:2}; renderA(); }
   else if(h==='dash'){ switchView('dash'); }
   else if(h==='a'){ switchView('a'); }
   // Model B was removed — keep old links from landing nowhere
