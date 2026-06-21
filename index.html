@@ -67,6 +67,29 @@
   .winbtn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;font-weight:800;padding:13px 0;border-radius:11px;border:1px solid var(--chipline);background:#fff;color:#33433b;cursor:pointer;}
   .winbtn .flag{font-size:18px}
   .winbtn.on{border:2px solid var(--orange);background:#fff5ee;color:var(--orange-deep)}
+
+  /* penalties highlight — Treatment 1: shootout zone (gold layer, distinct from the orange FT/ET path) */
+  .pen-zone{background:#fbf3d6;border:1px solid var(--gold-deep);border-radius:14px;padding:13px 13px 14px;margin-top:2px}
+  .pen-zone .pz-head{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .pen-zone .pz-ico{font-size:18px;line-height:1}
+  .pen-zone .pz-title{font-size:12.5px;font-weight:900;letter-spacing:.6px;color:#7a5b12;text-transform:uppercase}
+  .pen-zone .pz-help{font-size:10.5px;line-height:1.45;color:#6b5a2a;margin:0 0 11px}
+  .pen-zone .winbtn{background:#fffdf6}
+  .pen-zone .winbtn.on{border:2px solid var(--gold-deep);background:#fff;color:#7a5b12}
+  /* penalties highlight — Treatment 2: accent badge + bold question */
+  .pen-badge .pb-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+  .pen-badge .pb-pill{display:inline-flex;align-items:center;gap:5px;background:var(--gold);color:#3a2d05;font-size:10px;font-weight:900;letter-spacing:.6px;border-radius:20px;padding:4px 10px;text-transform:uppercase}
+  .pen-badge .pb-q{font-size:14px;font-weight:900;color:var(--ink);margin-bottom:9px}
+  .pen-badge .winbtn.on{border:2px solid var(--gold-deep);background:#fffdf2;color:#7a5b12}
+  .pen-badge .pb-caps{display:flex;gap:10px;margin-top:6px}
+  .pen-badge .pb-cap{flex:1;text-align:center;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.3px}
+
+  /* treatment switcher (review control on view A) */
+  .treatswitch{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .treatswitch .ts-label{font-size:12px;font-weight:800;color:#3a473f}
+  .ts-pill{border:1px solid var(--chipline);background:#fff;border-radius:9px;padding:6px 12px;font-size:12px;font-weight:800;color:#4a574f;cursor:pointer}
+  .ts-pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .treatswitch .ts-hint{font-size:11px;color:var(--muted)}
   .submit{margin-top:16px;width:100%;background:var(--orange);color:#fff;border:none;text-align:center;font-weight:800;font-size:14px;padding:14px;border-radius:13px;letter-spacing:.5px;cursor:pointer}
   .submit:disabled{background:#d9c3b4;cursor:not-allowed}
   .guard{margin-top:10px;font-size:11.5px;line-height:1.45;color:var(--bad);background:#fdeceb;border:1px solid #f6cfcc;border-radius:10px;padding:9px 11px;display:none}
@@ -119,8 +142,7 @@
 
 <div class="topbar">
   <span class="brand"><span class="dot"></span>Predict &amp; Win — Knockout prototype</span>
-  <button class="tab active" data-view="a" onclick="switchView('a')">Player · A · Adaptive strip</button>
-  <button class="tab" data-view="b" onclick="switchView('b')">Player · B · Advancer-first</button>
+  <button class="tab active" data-view="a" onclick="switchView('a')">Player · Adaptive strip</button>
   <button class="tab" data-view="dash" onclick="switchView('dash')">Merchant · Dashboard</button>
   <span class="spacer"></span>
   <button class="langtoggle" id="langtoggle" onclick="toggleLang()">🌐 العربية</button>
@@ -131,6 +153,12 @@
 
   <!-- ===================== VIEW A ===================== -->
   <div class="view active" id="view-a">
+    <div class="treatswitch">
+      <span class="ts-label">Penalties highlight:</span>
+      <button class="ts-pill on" id="ts-zone" onclick="setPensStyle('zone')">Treatment 1 · Shootout zone</button>
+      <button class="ts-pill" id="ts-badge" onclick="setPensStyle('badge')">Treatment 2 · Accent badge</button>
+      <span class="ts-hint">— appears on a level score (the default 0–0)</span>
+    </div>
     <div class="split">
       <div class="col-phone">
         <div class="phone">
@@ -168,62 +196,6 @@
           <div class="actual-grid" id="a-actuals"></div>
           <div class="score-out" id="a-score"></div>
           <div class="rules-mini" id="a-rules"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== VIEW B ===================== -->
-  <div class="view" id="view-b">
-    <div class="split">
-      <div class="col-phone">
-        <div class="phone">
-          <div class="phead"><div class="sub" data-i18n="wc">WORLD CUP 2026</div><div class="ttl" data-i18n="pw">PREDICT &amp; WIN</div></div>
-          <div class="stats">
-            <div class="stat lead"><div class="n">64</div><div class="l" data-i18n="points">YOUR POINTS</div></div>
-            <div class="stat"><div class="n">#6</div><div class="l" data-i18n="rank">RANK</div></div>
-            <div class="stat"><div class="n">7</div><div class="l" data-i18n="exact">EXACT</div></div>
-          </div>
-          <div class="mc">
-            <div class="stagerow"><span class="stage" data-i18n="r16">ROUND OF 16</span><span class="ko-time" data-i18n="kotime">2:13 PM · 1H 5M left</span></div>
-            <div class="qlabel" style="margin-top:14px" data-i18n="whogoes">WHO GOES THROUGH?</div>
-            <div class="winsel">
-              <button class="winbtn" id="b-adv-POR" onclick="setAdv('POR')"><span class="flag">🇵🇹</span> <span data-i18n="portugal">PORTUGAL</span></button>
-              <button class="winbtn" id="b-adv-FRA" onclick="setAdv('FRA')"><span class="flag">🇫🇷</span> <span data-i18n="france">FRANCE</span></button>
-            </div>
-            <div class="divider"></div>
-            <div class="qlabel"><span data-i18n="how">HOW?</span> <span class="opt-badge" data-i18n="bonus">+BONUS</span></div>
-            <div class="seg">
-              <div class="chip" id="b-how-FT" onclick="setHow('FT')" data-i18n="in90">In 90′</div>
-              <div class="chip" id="b-how-ET" onclick="setHow('ET')" data-i18n="etime">Extra time</div>
-              <div class="chip" id="b-how-PENS" onclick="setHow('PENS')" data-i18n="penalties">Penalties</div>
-            </div>
-            <div class="qlabel" style="margin-top:16px"><span data-i18n="predscore">PREDICT THE SCORE</span> <span class="opt-badge" data-i18n="morepts">MORE POINTS</span></div>
-            <div class="teams" style="margin-top:2px">
-              <div class="team"><div class="flag">🇵🇹</div><div class="nm" data-i18n="por">POR</div></div>
-              <div class="stepper"><button onclick="bump('b','h',1)">+</button><div class="num" id="b-h">1</div><button onclick="bump('b','h',-1)">−</button></div>
-              <div class="colon">:</div>
-              <div class="stepper"><button onclick="bump('b','a',1)">+</button><div class="num" id="b-a">1</div><button onclick="bump('b','a',-1)">−</button></div>
-              <div class="team"><div class="flag">🇫🇷</div><div class="nm" data-i18n="fra">FRA</div></div>
-            </div>
-            <div class="guard" id="b-guard"></div>
-            <button class="submit" id="b-submit" onclick="fakeSubmit('b')">SUBMIT PREDICTION</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-side">
-        <div class="panel">
-          <h3>Model B — who-goes-through is the headline</h3>
-          <p class="lead">Most explicit about the knockout essence: the advancing team is the first, mandatory pick, and penalties are just one plainly-labelled option. The cost is <b>three inputs that can disagree</b> — pick Portugal to go through, then select a France-winning score, and we have to step in. Try it: tap PORTUGAL, then dial the score to 1–2.</p>
-          <div class="pred-readout" id="b-readout"></div>
-        </div>
-        <div class="panel">
-          <h3>Live points preview</h3>
-          <p class="lead">Same scoring engine as Model A.</p>
-          <div class="actual-grid" id="b-actuals"></div>
-          <div class="score-out" id="b-score"></div>
-          <div class="rules-mini" id="b-rules"></div>
         </div>
       </div>
     </div>
@@ -268,10 +240,10 @@
 /* ----------------- shared state ----------------- */
 const DEFAULTS = {
   cfg:{exact:3, diff:2, winner:1, part:0, decider:2},
-  a:{h:0, a:0, manner:null, pens:null, actual:2},   // actual index default → 1–1 POR pens
-  b:{adv:null, how:null, h:1, a:1, actual:2}
+  a:{h:0, a:0, manner:null, pens:null, actual:2}   // actual index default → 1–1 POR pens
 };
 let S = JSON.parse(JSON.stringify(DEFAULTS));
+let PENS_STYLE = 'zone';   // penalties highlight treatment: 'zone' (default) | 'badge'
 
 const TEAMS = {POR:{flag:'🇵🇹',name:'Portugal',short:'POR',ar:'البرتغال'}, FRA:{flag:'🇫🇷',name:'France',short:'FRA',ar:'فرنسا'}};
 
@@ -285,6 +257,7 @@ const I18N = {
     how:'HOW?', bonus:'+BONUS', in90:'In 90′', etime:'Extra time', penalties:'Penalties',
     predscore:'PREDICT THE SCORE', morepts:'MORE POINTS',
     a_levelq:'LEVEL AFTER EXTRA TIME — WHO GOES THROUGH ON PENALTIES?',
+    penTitle:'PENALTY SHOOTOUT', penHelp:'It’s level after extra time — pick who wins the shootout. This prediction is scored on penalties.', penQ:'Who wins the penalty shootout?', penBadge:'Penalties', penCap:'to win on penalties',
     optbonus:'OPTIONAL · +BONUS', min90:'90 MIN', etimeCaps:'EXTRA TIME',
     submit:'SUBMIT PREDICTION', pickadv:'PICK WHO ADVANCES', saved:'✓ PREDICTION SAVED', fixconflict:'FIX THE CONFLICT ABOVE'
   },
@@ -295,6 +268,7 @@ const I18N = {
     how:'كيف؟', bonus:'+مكافأة', in90:'في 90′', etime:'الوقت الإضافي', penalties:'الترجيح',
     predscore:'توقّع النتيجة', morepts:'نقاط أكثر',
     a_levelq:'تعادل بعد الوقت الإضافي — مَن يتأهّل بركلات الترجيح؟',
+    penTitle:'ركلات الترجيح', penHelp:'تعادل بعد الوقت الإضافي — اختر مَن يفوز بركلات الترجيح. يُحتسب هذا التوقّع على الترجيح.', penQ:'مَن يفوز بركلات الترجيح؟', penBadge:'الترجيح', penCap:'للفوز بالترجيح',
     optbonus:'اختياري · +مكافأة', min90:'90 دقيقة', etimeCaps:'الوقت الإضافي',
     submit:'إرسال التوقّع', pickadv:'اختر مَن يتأهّل', saved:'✓ تم حفظ التوقّع', fixconflict:'صحّح التعارض بالأعلى'
   }
@@ -344,12 +318,27 @@ function renderA(){
   const T = I18N[LANG];
   const strip = document.getElementById('a-strip');
   if(draw){
-    strip.innerHTML = `
-      <div class="qlabel">${T.a_levelq}</div>
+    const btns = `
       <div class="winsel">
         <button class="winbtn ${S.a.pens==='POR'?'on':''}" onclick="setPens('POR')"><span class="flag">🇵🇹</span> ${tshort('POR')}</button>
         <button class="winbtn ${S.a.pens==='FRA'?'on':''}" onclick="setPens('FRA')"><span class="flag">🇫🇷</span> ${tshort('FRA')}</button>
       </div>`;
+    if(PENS_STYLE==='badge'){
+      strip.innerHTML = `
+        <div class="pen-badge">
+          <div class="pb-row"><span class="pb-pill">⚽ ${T.penBadge}</span></div>
+          <div class="pb-q">${T.penQ}</div>
+          ${btns}
+          <div class="pb-caps"><div class="pb-cap">${T.penCap}</div><div class="pb-cap">${T.penCap}</div></div>
+        </div>`;
+    } else {
+      strip.innerHTML = `
+        <div class="pen-zone">
+          <div class="pz-head"><span class="pz-ico">⚽</span><span class="pz-title">${T.penTitle}</span></div>
+          <div class="pz-help">${T.penHelp}</div>
+          ${btns}
+        </div>`;
+    }
   } else {
     const w = S.a.h>S.a.a?'POR':'FRA';
     const winwhen = LANG==='ar' ? ('فوز '+tname(w)+' — متى؟') : (TEAMS[w].name.toUpperCase()+' WIN — WHEN?');
@@ -373,35 +362,6 @@ function renderA(){
 }
 
 /* ----------------- Model B ----------------- */
-function normB(){ return {h:S.b.h, a:S.b.a, deciderType:S.b.how, advancer:S.b.adv}; }
-function renderB(){
-  document.getElementById('b-h').textContent=S.b.h;
-  document.getElementById('b-a').textContent=S.b.a;
-  ['POR','FRA'].forEach(t=>document.getElementById('b-adv-'+t).classList.toggle('on',S.b.adv===t));
-  ['FT','ET','PENS'].forEach(h=>document.getElementById('b-how-'+h).classList.toggle('on',S.b.how===h));
-
-  // guards
-  const T = I18N[LANG];
-  const ar = LANG==='ar';
-  const g=document.getElementById('b-guard'); let msg='';
-  const decisive = S.b.h!==S.b.a;
-  const scoreWinner = decisive ? (S.b.h>S.b.a?'POR':'FRA') : null;
-  if(!S.b.adv){ msg = ar ? 'اختر مَن يتأهّل أولاً.' : 'Pick who goes through first.'; }
-  else if(S.b.how==='PENS' && decisive){ msg = ar ? 'ركلات الترجيح تحدث فقط عند التعادل. اجعل النتيجة متعادلة (مثل 1–1) أو غيّر «كيف؟».' : 'Penalties only happen on a level score. Set the score level (e.g. 1–1) or change “How?”.'; }
-  else if((S.b.how==='FT'||S.b.how==='ET') && !decisive){
-    const mw = ar ? (S.b.how==='FT'?'في 90 دقيقة':'الوقت الإضافي') : (S.b.how==='FT'?'90-minute':'extra-time');
-    msg = ar ? ('نتيجة '+mw+' لا يمكن أن تكون تعادلاً. اضبط نتيجة فائزة أو غيّر «كيف؟» إلى الترجيح.') : ('A '+mw+' result can’t be a draw. Set a winning score or switch “How?” to Penalties.');
-  }
-  else if((S.b.how==='FT'||S.b.how==='ET') && scoreWinner!==S.b.adv){ msg = ar ? ('اخترت تأهّل '+tname(S.b.adv)+'، لكن هذه النتيجة تجعل '+tname(scoreWinner)+' هو الفائز. عدّل النتيجة أو غيّر مَن يتأهّل.') : ('You picked '+TEAMS[S.b.adv].name+' to go through, but this score has '+TEAMS[scoreWinner].name+' winning. Adjust the score or switch who advances.'); }
-  g.className='guard'+(msg?' show':''); g.textContent=msg;
-  document.getElementById('b-submit').disabled = !!msg || !S.b.how;
-  document.getElementById('b-submit').textContent = msg ? T.fixconflict : T.submit;
-
-  document.getElementById('b-readout').innerHTML = predText(normB());
-  renderActuals('b');
-  renderScore('b', normB());
-}
-
 /* ----------------- shared rendering ----------------- */
 function predText(p){
   if(!p.advancer && p.h===p.a) return 'Your prediction: <b>'+p.h+'–'+p.a+'</b> — pick who advances to complete it.';
@@ -432,17 +392,20 @@ function renderScore(view, pred){
 /* ----------------- interactions ----------------- */
 function bump(view, side, d){
   const k = side==='h'?'h':'a';
-  S[view][k] = Math.max(0, Math.min(9, S[view][k]+d));
-  if(view==='a'){ // reset the now-irrelevant follow-up when crossing draw/decisive
-    if(S.a.h===S.a.a){ S.a.manner=null; } else { S.a.pens=null; }
-  }
-  view==='a'?renderA():renderB();
+  S.a[k] = Math.max(0, Math.min(9, S.a[k]+d));
+  // reset the now-irrelevant follow-up when crossing draw/decisive
+  if(S.a.h===S.a.a){ S.a.manner=null; } else { S.a.pens=null; }
+  renderA();
 }
 function setManner(m){ S.a.manner = (S.a.manner===m?null:m); renderA(); }
 function setPens(t){ S.a.pens = t; renderA(); }
-function setActual(view,i){ S[view].actual=i; view==='a'?renderA():renderB(); }
-function setAdv(t){ S.b.adv = t; renderB(); }
-function setHow(h){ S.b.how = (S.b.how===h?null:h); renderB(); }
+function setActual(view,i){ S.a.actual=i; renderA(); }
+function setPensStyle(s){
+  PENS_STYLE = s;
+  document.getElementById('ts-zone').classList.toggle('on', s==='zone');
+  document.getElementById('ts-badge').classList.toggle('on', s==='badge');
+  renderA();
+}
 function fakeSubmit(view){
   const btn=document.getElementById(view+'-submit');
   if(btn.disabled) return;
@@ -476,7 +439,7 @@ function applyLang(){
   });
   document.querySelectorAll('.phone').forEach(p=>p.classList.toggle('rtl', LANG==='ar'));
   document.getElementById('langtoggle').textContent = LANG==='ar' ? '🌐 English' : '🌐 العربية';
-  renderA(); renderB();
+  renderA();
 }
 function toggleLang(){ LANG = (LANG==='ar') ? 'en' : 'ar'; applyLang(); }
 function resetAll(){
@@ -486,7 +449,7 @@ function resetAll(){
   document.getElementById('cfg-winner').value=S.cfg.winner;
   document.getElementById('cfg-part').value=S.cfg.part;
   document.getElementById('cfg-decider').value=S.cfg.decider;
-  renderA(); renderB();
+  renderA();
 }
 
 /* ----------------- deep-link states (shareable + screenshots) ----------------- */
@@ -494,10 +457,12 @@ function applyHash(){
   const h=(location.hash||'').replace('#','');
   if(h==='a-decisive'){ switchView('a'); S.a={h:2,a:1,manner:'FT',pens:null,actual:0}; renderA(); }
   else if(h==='a-edge'){ switchView('a'); S.a={h:2,a:2,manner:null,pens:'POR',actual:2}; renderA(); }
-  else if(h==='b'){ switchView('b'); S.b={adv:'POR',how:'PENS',h:1,a:1,actual:2}; renderB(); }
-  else if(h==='b-guard'){ switchView('b'); S.b={adv:'POR',how:'FT',h:1,a:2,actual:2}; renderB(); }
+  else if(h==='a-pen-zone'){ switchView('a'); S.a={h:0,a:0,manner:null,pens:null,actual:2}; setPensStyle('zone'); }
+  else if(h==='a-pen-badge'){ switchView('a'); S.a={h:0,a:0,manner:null,pens:null,actual:2}; setPensStyle('badge'); }
   else if(h==='dash'){ switchView('dash'); }
   else if(h==='a'){ switchView('a'); }
+  // Model B was removed — keep old links from landing nowhere
+  else if(h==='b'||h==='b-guard'){ switchView('a'); }
 }
 window.addEventListener('hashchange', applyHash);
 applyLang(); applyHash();
