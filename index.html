@@ -29,6 +29,8 @@
 
   /* phone */
   .phone{width:360px;background:linear-gradient(180deg,var(--green),var(--green-2));border-radius:30px;padding:16px 14px 20px;box-shadow:0 14px 40px rgba(0,0,0,.28);}
+  .phone.rtl{direction:rtl}
+  .langtoggle{border:1px solid var(--gold-deep);background:var(--gold);border-radius:9px;padding:8px 12px;font-size:12px;font-weight:800;color:#3a2d05;cursor:pointer;}
   .phead{text-align:center;color:var(--gold);padding:6px 0 12px;}
   .phead .sub{font-size:10px;letter-spacing:2px;font-weight:700;opacity:.8}
   .phead .ttl{color:#fff;font-size:20px;font-weight:800;letter-spacing:.5px;margin-top:2px;}
@@ -121,6 +123,7 @@
   <button class="tab" data-view="b" onclick="switchView('b')">Player · B · Advancer-first</button>
   <button class="tab" data-view="dash" onclick="switchView('dash')">Merchant · Dashboard</button>
   <span class="spacer"></span>
+  <button class="langtoggle" id="langtoggle" onclick="toggleLang()">🌐 العربية</button>
   <button class="reset" onclick="resetAll()">↺ Reset demo</button>
 </div>
 
@@ -131,20 +134,20 @@
     <div class="split">
       <div class="col-phone">
         <div class="phone">
-          <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+          <div class="phead"><div class="sub" data-i18n="wc">WORLD CUP 2026</div><div class="ttl" data-i18n="pw">PREDICT &amp; WIN</div></div>
           <div class="stats">
-            <div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div>
-            <div class="stat"><div class="n">#6</div><div class="l">RANK</div></div>
-            <div class="stat"><div class="n">7</div><div class="l">EXACT</div></div>
+            <div class="stat lead"><div class="n">64</div><div class="l" data-i18n="points">YOUR POINTS</div></div>
+            <div class="stat"><div class="n">#6</div><div class="l" data-i18n="rank">RANK</div></div>
+            <div class="stat"><div class="n">7</div><div class="l" data-i18n="exact">EXACT</div></div>
           </div>
           <div class="mc">
-            <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+            <div class="stagerow"><span class="stage" data-i18n="r16">ROUND OF 16</span><span class="ko-time" data-i18n="kotime">2:13 PM · 1H 5M left</span></div>
             <div class="teams">
-              <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+              <div class="team"><div class="flag">🇵🇹</div><div class="nm" data-i18n="por">POR</div></div>
               <div class="stepper"><button onclick="bump('a','h',1)">+</button><div class="num" id="a-h">0</div><button onclick="bump('a','h',-1)">−</button></div>
               <div class="colon">:</div>
               <div class="stepper"><button onclick="bump('a','a',1)">+</button><div class="num" id="a-a">0</div><button onclick="bump('a','a',-1)">−</button></div>
-              <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
+              <div class="team"><div class="flag">🇫🇷</div><div class="nm" data-i18n="fra">FRA</div></div>
             </div>
             <div class="divider"></div>
             <div id="a-strip"><!-- adaptive strip injected here --></div>
@@ -175,33 +178,33 @@
     <div class="split">
       <div class="col-phone">
         <div class="phone">
-          <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+          <div class="phead"><div class="sub" data-i18n="wc">WORLD CUP 2026</div><div class="ttl" data-i18n="pw">PREDICT &amp; WIN</div></div>
           <div class="stats">
-            <div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div>
-            <div class="stat"><div class="n">#6</div><div class="l">RANK</div></div>
-            <div class="stat"><div class="n">7</div><div class="l">EXACT</div></div>
+            <div class="stat lead"><div class="n">64</div><div class="l" data-i18n="points">YOUR POINTS</div></div>
+            <div class="stat"><div class="n">#6</div><div class="l" data-i18n="rank">RANK</div></div>
+            <div class="stat"><div class="n">7</div><div class="l" data-i18n="exact">EXACT</div></div>
           </div>
           <div class="mc">
-            <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
-            <div class="qlabel" style="margin-top:14px">WHO GOES THROUGH?</div>
+            <div class="stagerow"><span class="stage" data-i18n="r16">ROUND OF 16</span><span class="ko-time" data-i18n="kotime">2:13 PM · 1H 5M left</span></div>
+            <div class="qlabel" style="margin-top:14px" data-i18n="whogoes">WHO GOES THROUGH?</div>
             <div class="winsel">
-              <button class="winbtn" id="b-adv-POR" onclick="setAdv('POR')"><span class="flag">🇵🇹</span> PORTUGAL</button>
-              <button class="winbtn" id="b-adv-FRA" onclick="setAdv('FRA')"><span class="flag">🇫🇷</span> FRANCE</button>
+              <button class="winbtn" id="b-adv-POR" onclick="setAdv('POR')"><span class="flag">🇵🇹</span> <span data-i18n="portugal">PORTUGAL</span></button>
+              <button class="winbtn" id="b-adv-FRA" onclick="setAdv('FRA')"><span class="flag">🇫🇷</span> <span data-i18n="france">FRANCE</span></button>
             </div>
             <div class="divider"></div>
-            <div class="qlabel">HOW? <span class="opt-badge">+BONUS</span></div>
+            <div class="qlabel"><span data-i18n="how">HOW?</span> <span class="opt-badge" data-i18n="bonus">+BONUS</span></div>
             <div class="seg">
-              <div class="chip" id="b-how-FT" onclick="setHow('FT')">In 90′</div>
-              <div class="chip" id="b-how-ET" onclick="setHow('ET')">Extra time</div>
-              <div class="chip" id="b-how-PENS" onclick="setHow('PENS')">Penalties</div>
+              <div class="chip" id="b-how-FT" onclick="setHow('FT')" data-i18n="in90">In 90′</div>
+              <div class="chip" id="b-how-ET" onclick="setHow('ET')" data-i18n="etime">Extra time</div>
+              <div class="chip" id="b-how-PENS" onclick="setHow('PENS')" data-i18n="penalties">Penalties</div>
             </div>
-            <div class="qlabel" style="margin-top:16px">PREDICT THE SCORE <span class="opt-badge">MORE POINTS</span></div>
+            <div class="qlabel" style="margin-top:16px"><span data-i18n="predscore">PREDICT THE SCORE</span> <span class="opt-badge" data-i18n="morepts">MORE POINTS</span></div>
             <div class="teams" style="margin-top:2px">
-              <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+              <div class="team"><div class="flag">🇵🇹</div><div class="nm" data-i18n="por">POR</div></div>
               <div class="stepper"><button onclick="bump('b','h',1)">+</button><div class="num" id="b-h">1</div><button onclick="bump('b','h',-1)">−</button></div>
               <div class="colon">:</div>
               <div class="stepper"><button onclick="bump('b','a',1)">+</button><div class="num" id="b-a">1</div><button onclick="bump('b','a',-1)">−</button></div>
-              <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
+              <div class="team"><div class="flag">🇫🇷</div><div class="nm" data-i18n="fra">FRA</div></div>
             </div>
             <div class="guard" id="b-guard"></div>
             <button class="submit" id="b-submit" onclick="fakeSubmit('b')">SUBMIT PREDICTION</button>
@@ -270,7 +273,34 @@ const DEFAULTS = {
 };
 let S = JSON.parse(JSON.stringify(DEFAULTS));
 
-const TEAMS = {POR:{flag:'🇵🇹',name:'Portugal',short:'POR'}, FRA:{flag:'🇫🇷',name:'France',short:'FRA'}};
+const TEAMS = {POR:{flag:'🇵🇹',name:'Portugal',short:'POR',ar:'البرتغال'}, FRA:{flag:'🇫🇷',name:'France',short:'FRA',ar:'فرنسا'}};
+
+/* ----------------- i18n (player card only) ----------------- */
+let LANG = 'en';
+const I18N = {
+  en:{
+    wc:'WORLD CUP 2026', pw:'PREDICT & WIN', points:'YOUR POINTS', rank:'RANK', exact:'EXACT',
+    r16:'ROUND OF 16', kotime:'2:13 PM · 1H 5M left', por:'POR', fra:'FRA',
+    whogoes:'WHO GOES THROUGH?', portugal:'PORTUGAL', france:'FRANCE',
+    how:'HOW?', bonus:'+BONUS', in90:'In 90′', etime:'Extra time', penalties:'Penalties',
+    predscore:'PREDICT THE SCORE', morepts:'MORE POINTS',
+    a_levelq:'LEVEL AFTER EXTRA TIME — WHO GOES THROUGH ON PENALTIES?',
+    optbonus:'OPTIONAL · +BONUS', min90:'90 MIN', etimeCaps:'EXTRA TIME',
+    submit:'SUBMIT PREDICTION', pickadv:'PICK WHO ADVANCES', saved:'✓ PREDICTION SAVED', fixconflict:'FIX THE CONFLICT ABOVE'
+  },
+  ar:{
+    wc:'كأس العالم 2026', pw:'توقّع واربح', points:'نقاطك', rank:'ترتيبك', exact:'مطابِق',
+    r16:'دور الـ16', kotime:'2:13 م · باقٍ 1س 5د', por:'البرتغال', fra:'فرنسا',
+    whogoes:'مَن يتأهّل؟', portugal:'البرتغال', france:'فرنسا',
+    how:'كيف؟', bonus:'+مكافأة', in90:'في 90′', etime:'الوقت الإضافي', penalties:'الترجيح',
+    predscore:'توقّع النتيجة', morepts:'نقاط أكثر',
+    a_levelq:'تعادل بعد الوقت الإضافي — مَن يتأهّل بركلات الترجيح؟',
+    optbonus:'اختياري · +مكافأة', min90:'90 دقيقة', etimeCaps:'الوقت الإضافي',
+    submit:'إرسال التوقّع', pickadv:'اختر مَن يتأهّل', saved:'✓ تم حفظ التوقّع', fixconflict:'صحّح التعارض بالأعلى'
+  }
+};
+const tname = t => LANG==='ar' ? TEAMS[t].ar : TEAMS[t].name; // full name, language-aware (card only)
+const tshort = t => LANG==='ar' ? TEAMS[t].ar : TEAMS[t].short;
 
 const ACTUALS = [
   {label:'POR win 2–1 — in Full Time',        h:2,a:1, by:'FT',  adv:'POR'},
@@ -311,27 +341,29 @@ function renderA(){
   document.getElementById('a-h').textContent=S.a.h;
   document.getElementById('a-a').textContent=S.a.a;
   const draw = S.a.h===S.a.a;
+  const T = I18N[LANG];
   const strip = document.getElementById('a-strip');
   if(draw){
     strip.innerHTML = `
-      <div class="qlabel">LEVEL AFTER EXTRA TIME — WHO GOES THROUGH ON PENALTIES?</div>
+      <div class="qlabel">${T.a_levelq}</div>
       <div class="winsel">
-        <button class="winbtn ${S.a.pens==='POR'?'on':''}" onclick="setPens('POR')"><span class="flag">🇵🇹</span> POR</button>
-        <button class="winbtn ${S.a.pens==='FRA'?'on':''}" onclick="setPens('FRA')"><span class="flag">🇫🇷</span> FRA</button>
+        <button class="winbtn ${S.a.pens==='POR'?'on':''}" onclick="setPens('POR')"><span class="flag">🇵🇹</span> ${tshort('POR')}</button>
+        <button class="winbtn ${S.a.pens==='FRA'?'on':''}" onclick="setPens('FRA')"><span class="flag">🇫🇷</span> ${tshort('FRA')}</button>
       </div>`;
   } else {
     const w = S.a.h>S.a.a?'POR':'FRA';
+    const winwhen = LANG==='ar' ? ('فوز '+tname(w)+' — متى؟') : (TEAMS[w].name.toUpperCase()+' WIN — WHEN?');
     strip.innerHTML = `
-      <div class="qlabel">${TEAMS[w].name.toUpperCase()} WIN — WHEN? <span class="opt-badge">OPTIONAL · +BONUS</span></div>
+      <div class="qlabel">${winwhen} <span class="opt-badge">${T.optbonus}</span></div>
       <div class="seg">
-        <div class="chip ${S.a.manner==='FT'?'on':''}" onclick="setManner('FT')">90 MIN</div>
-        <div class="chip ${S.a.manner==='ET'?'on':''}" onclick="setManner('ET')">EXTRA TIME</div>
+        <div class="chip ${S.a.manner==='FT'?'on':''}" onclick="setManner('FT')">${T.min90}</div>
+        <div class="chip ${S.a.manner==='ET'?'on':''}" onclick="setManner('ET')">${T.etimeCaps}</div>
       </div>`;
   }
   // submit lock: a draw must name the pens winner
   const submit=document.getElementById('a-submit');
   submit.disabled = draw && !S.a.pens;
-  submit.textContent = (draw && !S.a.pens) ? 'PICK WHO ADVANCES' : 'SUBMIT PREDICTION';
+  submit.textContent = (draw && !S.a.pens) ? T.pickadv : T.submit;
 
   // readout
   const p=normA();
@@ -349,16 +381,21 @@ function renderB(){
   ['FT','ET','PENS'].forEach(h=>document.getElementById('b-how-'+h).classList.toggle('on',S.b.how===h));
 
   // guards
+  const T = I18N[LANG];
+  const ar = LANG==='ar';
   const g=document.getElementById('b-guard'); let msg='';
   const decisive = S.b.h!==S.b.a;
   const scoreWinner = decisive ? (S.b.h>S.b.a?'POR':'FRA') : null;
-  if(!S.b.adv){ msg='Pick who goes through first.'; }
-  else if(S.b.how==='PENS' && decisive){ msg='Penalties only happen on a level score. Set the score level (e.g. 1–1) or change “How?”.'; }
-  else if((S.b.how==='FT'||S.b.how==='ET') && !decisive){ msg='A '+(S.b.how==='FT'?'90-minute':'extra-time')+' result can’t be a draw. Set a winning score or switch “How?” to Penalties.'; }
-  else if((S.b.how==='FT'||S.b.how==='ET') && scoreWinner!==S.b.adv){ msg='You picked '+TEAMS[S.b.adv].name+' to go through, but this score has '+TEAMS[scoreWinner].name+' winning. Adjust the score or switch who advances.'; }
+  if(!S.b.adv){ msg = ar ? 'اختر مَن يتأهّل أولاً.' : 'Pick who goes through first.'; }
+  else if(S.b.how==='PENS' && decisive){ msg = ar ? 'ركلات الترجيح تحدث فقط عند التعادل. اجعل النتيجة متعادلة (مثل 1–1) أو غيّر «كيف؟».' : 'Penalties only happen on a level score. Set the score level (e.g. 1–1) or change “How?”.'; }
+  else if((S.b.how==='FT'||S.b.how==='ET') && !decisive){
+    const mw = ar ? (S.b.how==='FT'?'في 90 دقيقة':'الوقت الإضافي') : (S.b.how==='FT'?'90-minute':'extra-time');
+    msg = ar ? ('نتيجة '+mw+' لا يمكن أن تكون تعادلاً. اضبط نتيجة فائزة أو غيّر «كيف؟» إلى الترجيح.') : ('A '+mw+' result can’t be a draw. Set a winning score or switch “How?” to Penalties.');
+  }
+  else if((S.b.how==='FT'||S.b.how==='ET') && scoreWinner!==S.b.adv){ msg = ar ? ('اخترت تأهّل '+tname(S.b.adv)+'، لكن هذه النتيجة تجعل '+tname(scoreWinner)+' هو الفائز. عدّل النتيجة أو غيّر مَن يتأهّل.') : ('You picked '+TEAMS[S.b.adv].name+' to go through, but this score has '+TEAMS[scoreWinner].name+' winning. Adjust the score or switch who advances.'); }
   g.className='guard'+(msg?' show':''); g.textContent=msg;
   document.getElementById('b-submit').disabled = !!msg || !S.b.how;
-  document.getElementById('b-submit').textContent = msg ? 'FIX THE CONFLICT ABOVE' : 'SUBMIT PREDICTION';
+  document.getElementById('b-submit').textContent = msg ? T.fixconflict : T.submit;
 
   document.getElementById('b-readout').innerHTML = predText(normB());
   renderActuals('b');
@@ -409,7 +446,7 @@ function setHow(h){ S.b.how = (S.b.how===h?null:h); renderB(); }
 function fakeSubmit(view){
   const btn=document.getElementById(view+'-submit');
   if(btn.disabled) return;
-  const old=btn.textContent; btn.textContent='✓ PREDICTION SAVED'; btn.style.background='#1f9d57';
+  const old=btn.textContent; btn.textContent=I18N[LANG].saved; btn.style.background='#1f9d57';
   setTimeout(()=>{btn.textContent=old; btn.style.background='';},1300);
 }
 
@@ -426,7 +463,22 @@ function switchView(v){
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
   document.querySelector('.tab[data-view="'+v+'"]').classList.add('active');
+  // the language toggle applies to the player cards only, not the dashboard
+  document.getElementById('langtoggle').style.display = (v==='dash') ? 'none' : '';
 }
+
+/* ----------------- language toggle (player cards A & B) ----------------- */
+function applyLang(){
+  const T = I18N[LANG];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    if(T[k]!=null) el.textContent = T[k];
+  });
+  document.querySelectorAll('.phone').forEach(p=>p.classList.toggle('rtl', LANG==='ar'));
+  document.getElementById('langtoggle').textContent = LANG==='ar' ? '🌐 English' : '🌐 العربية';
+  renderA(); renderB();
+}
+function toggleLang(){ LANG = (LANG==='ar') ? 'en' : 'ar'; applyLang(); }
 function resetAll(){
   S = JSON.parse(JSON.stringify(DEFAULTS));
   document.getElementById('cfg-exact').value=S.cfg.exact;
@@ -448,7 +500,7 @@ function applyHash(){
   else if(h==='a'){ switchView('a'); }
 }
 window.addEventListener('hashchange', applyHash);
-renderA(); renderB(); applyHash();
+applyLang(); applyHash();
 </script>
 </body>
 </html>
