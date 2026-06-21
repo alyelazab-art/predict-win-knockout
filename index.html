@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predict &amp; Win — Knockout prototype</title>
+<style>
+  :root{
+    --green:#0f3d2e; --green-2:#0c3328; --gold:#e4c45f; --gold-deep:#d8b24a;
+    --ink:#14241c; --card:#fbfaf5; --muted:#7c8a82; --line:#e2e6e1;
+    --orange:#e0732f; --orange-deep:#b5571c; --chipline:#d4dad5;
+    --good:#1f9d57; --bad:#cf3b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#eef1ee;color:var(--ink);}
+  .topbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;padding:10px 16px;flex-wrap:wrap;}
+  .topbar .brand{font-weight:800;margin-right:10px;display:flex;align-items:center;gap:8px;}
+  .topbar .brand .dot{width:20px;height:20px;border-radius:6px;background:var(--gold);display:inline-block;}
+  .tab{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 13px;font-size:13px;font-weight:700;color:#3a473f;cursor:pointer;}
+  .tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .spacer{flex:1}
+  .reset{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 12px;font-size:12px;font-weight:700;color:#7a6;cursor:pointer;}
+  .wrap{max-width:1060px;margin:24px auto;padding:0 18px;}
+  .view{display:none}
+  .view.active{display:block}
+  .split{display:flex;gap:30px;flex-wrap:wrap;align-items:flex-start;}
+  .col-phone{flex:0 0 360px}
+  .col-side{flex:1;min-width:320px}
+
+  /* phone */
+  .phone{width:360px;background:linear-gradient(180deg,var(--green),var(--green-2));border-radius:30px;padding:16px 14px 20px;box-shadow:0 14px 40px rgba(0,0,0,.28);}
+  .phead{text-align:center;color:var(--gold);padding:6px 0 12px;}
+  .phead .sub{font-size:10px;letter-spacing:2px;font-weight:700;opacity:.8}
+  .phead .ttl{color:#fff;font-size:20px;font-weight:800;letter-spacing:.5px;margin-top:2px;}
+  .stats{display:flex;gap:8px;margin:4px 4px 14px;}
+  .stat{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:9px 6px;text-align:center;}
+  .stat.lead{background:var(--gold);border-color:var(--gold);}
+  .stat .n{font-size:18px;font-weight:800;color:#fff}
+  .stat.lead .n{color:#3a2d05}
+  .stat .l{font-size:8px;letter-spacing:1px;font-weight:700;color:rgba(255,255,255,.7);margin-top:2px}
+  .stat.lead .l{color:#5b4a14}
+
+  .mc{background:var(--card);border-radius:18px;padding:16px;}
+  .mc .stagerow{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .stage{display:inline-block;border:1px solid var(--chipline);border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.5px;padding:4px 10px;color:#33433b;}
+  .ko-time{font-size:10px;color:var(--muted);font-weight:600}
+  .teams{display:flex;align-items:center;justify-content:space-between;margin:16px 4px 6px;}
+  .team{text-align:center;width:74px}
+  .team .flag{font-size:30px;line-height:1}
+  .team .nm{font-size:12px;font-weight:800;margin-top:4px}
+  .colon{font-size:20px;font-weight:800;color:#aab4ad}
+  .stepper{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .stepper button{width:34px;height:26px;border:none;border-radius:9px;background:#e7eae6;color:#33433b;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .stepper button:active{transform:scale(.94)}
+  .stepper .num{width:54px;height:50px;background:var(--ink);color:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800}
+
+  .divider{height:1px;background:var(--line);margin:14px 0 12px}
+  .qlabel{font-size:10px;letter-spacing:.7px;font-weight:800;color:var(--muted);margin:0 2px 8px;display:flex;align-items:center;gap:7px}
+  .opt-badge{font-size:8.5px;font-weight:800;color:#5f8a5f;background:#edf6ed;border:1px solid #cfe3cf;border-radius:10px;padding:1px 7px;letter-spacing:.5px}
+  .seg{display:flex;gap:8px}
+  .chip{flex:1;text-align:center;font-size:12px;font-weight:800;padding:11px 0;border-radius:11px;border:1px solid var(--chipline);color:#4a574f;background:#fff;cursor:pointer;}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chip.disabled{opacity:.35;pointer-events:none}
+  .winsel{display:flex;gap:10px}
+  .winbtn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;font-size:13px;font-weight:800;padding:13px 0;border-radius:11px;border:1px solid var(--chipline);background:#fff;color:#33433b;cursor:pointer;}
+  .winbtn .flag{font-size:18px}
+  .winbtn.on{border:2px solid var(--orange);background:#fff5ee;color:var(--orange-deep)}
+  .submit{margin-top:16px;width:100%;background:var(--orange);color:#fff;border:none;text-align:center;font-weight:800;font-size:14px;padding:14px;border-radius:13px;letter-spacing:.5px;cursor:pointer}
+  .submit:disabled{background:#d9c3b4;cursor:not-allowed}
+  .guard{margin-top:10px;font-size:11.5px;line-height:1.45;color:var(--bad);background:#fdeceb;border:1px solid #f6cfcc;border-radius:10px;padding:9px 11px;display:none}
+  .guard.show{display:block}
+
+  /* side panel */
+  .panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:18px;}
+  .panel h3{margin:0 0 4px;font-size:15px}
+  .panel .lead{color:var(--muted);font-size:12.5px;margin:0 0 14px;line-height:1.5}
+  .pred-readout{font-size:13px;background:#f4f7f4;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-weight:600}
+  .pred-readout b{color:var(--orange-deep)}
+  .actual-grid{display:flex;flex-direction:column;gap:7px;margin-bottom:6px}
+  .actual-btn{text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;font-size:12.5px;font-weight:700;color:#3a473f;cursor:pointer}
+  .actual-btn.on{border:2px solid var(--ink);background:#f3f5f2}
+  .score-out{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
+  .score-big{display:flex;align-items:baseline;gap:10px}
+  .score-big .pts{font-size:38px;font-weight:900;color:var(--ink)}
+  .score-big .ptl{font-size:12px;color:var(--muted);font-weight:700}
+  .breakdown{margin-top:8px;font-size:12.5px;color:#3a473f;line-height:1.6}
+  .breakdown .row{display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:3px 0}
+  .breakdown .row.tot{font-weight:800;border-bottom:none;padding-top:6px}
+  .rules-mini{font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:8px}
+  .rules-mini code{background:#f0f2ef;border-radius:5px;padding:1px 5px;font-weight:700;color:#3a473f}
+
+  /* dashboard */
+  .dash{max-width:720px;margin:0 auto}
+  .dash-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .dash-head h2{font-size:20px;margin:0}
+  .dash-sub{color:var(--muted);font-size:13px;margin:0 0 18px}
+  .drow{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:12px;overflow:hidden}
+  .drow .dhd{background:#f6f7f5;padding:11px 16px;font-weight:800;font-size:14px;display:flex;align-items:center;gap:9px}
+  .drow .dbody{padding:14px 16px}
+  .drow .flabel{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:5px}
+  .drow input[type=number]{width:100%;border:1px solid var(--chipline);border-radius:9px;padding:10px 12px;font-size:15px;font-weight:700;color:var(--ink)}
+  .dnew{border:2px solid var(--orange);box-shadow:0 6px 20px rgba(224,115,47,.12)}
+  .dnew .dhd{background:#fff5ee;color:var(--orange-deep)}
+  .tagnew{font-size:9px;font-weight:800;letter-spacing:.5px;background:var(--orange);color:#fff;border-radius:20px;padding:2px 8px}
+  .dhelp{font-size:12px;color:var(--muted);line-height:1.5;margin-top:8px}
+  .alts{background:#f4f7f4;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:18px;font-size:12.5px;line-height:1.6;color:#3a473f}
+  .alts h4{margin:0 0 8px;font-size:13px}
+  .alts table{width:100%;border-collapse:collapse}
+  .alts td{padding:5px 6px;vertical-align:top;border-bottom:1px solid var(--line)}
+  .alts td.k{font-weight:800;white-space:nowrap;width:130px}
+  .alts tr:last-child td{border-bottom:none}
+  .pick{color:var(--good);font-weight:800}
+  .note-pill{display:inline-block;background:#eef6ee;border:1px solid #cfe3cf;color:#3f7a3f;border-radius:8px;font-size:11px;font-weight:700;padding:4px 9px;margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="brand"><span class="dot"></span>Predict &amp; Win — Knockout prototype</span>
+  <button class="tab active" data-view="a" onclick="switchView('a')">Player · A · Adaptive strip</button>
+  <button class="tab" data-view="b" onclick="switchView('b')">Player · B · Advancer-first</button>
+  <button class="tab" data-view="dash" onclick="switchView('dash')">Merchant · Dashboard</button>
+  <span class="spacer"></span>
+  <button class="reset" onclick="resetAll()">↺ Reset demo</button>
+</div>
+
+<div class="wrap">
+
+  <!-- ===================== VIEW A ===================== -->
+  <div class="view active" id="view-a">
+    <div class="split">
+      <div class="col-phone">
+        <div class="phone">
+          <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+          <div class="stats">
+            <div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div>
+            <div class="stat"><div class="n">#6</div><div class="l">RANK</div></div>
+            <div class="stat"><div class="n">7</div><div class="l">EXACT</div></div>
+          </div>
+          <div class="mc">
+            <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+            <div class="teams">
+              <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+              <div class="stepper"><button onclick="bump('a','h',1)">+</button><div class="num" id="a-h">0</div><button onclick="bump('a','h',-1)">−</button></div>
+              <div class="colon">:</div>
+              <div class="stepper"><button onclick="bump('a','a',1)">+</button><div class="num" id="a-a">0</div><button onclick="bump('a','a',-1)">−</button></div>
+              <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
+            </div>
+            <div class="divider"></div>
+            <div id="a-strip"><!-- adaptive strip injected here --></div>
+            <button class="submit" id="a-submit" onclick="fakeSubmit('a')">SUBMIT PREDICTION</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-side">
+        <div class="panel">
+          <h3>Model A — the score drives everything</h3>
+          <p class="lead">The familiar group-stage card. The strip below the score <b>adapts live</b>: a level score (including the default 0–0) shows the penalties picker, so penalties are visible from the start. A decisive score swaps it to the optional Full&nbsp;Time / Extra&nbsp;Time toggle. There's no way to create a contradiction — the score is the single source of truth.</p>
+          <div class="pred-readout" id="a-readout"></div>
+        </div>
+        <div class="panel" id="a-scorepanel">
+          <h3>Live points preview</h3>
+          <p class="lead">Pick how the match <i>actually</i> ends and watch what this prediction scores. (Edge case to try: predict 2–2 with POR on pens, then choose the 1–1 POR-pens result.)</p>
+          <div class="actual-grid" id="a-actuals"></div>
+          <div class="score-out" id="a-score"></div>
+          <div class="rules-mini" id="a-rules"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== VIEW B ===================== -->
+  <div class="view" id="view-b">
+    <div class="split">
+      <div class="col-phone">
+        <div class="phone">
+          <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+          <div class="stats">
+            <div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div>
+            <div class="stat"><div class="n">#6</div><div class="l">RANK</div></div>
+            <div class="stat"><div class="n">7</div><div class="l">EXACT</div></div>
+          </div>
+          <div class="mc">
+            <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+            <div class="qlabel" style="margin-top:14px">WHO GOES THROUGH?</div>
+            <div class="winsel">
+              <button class="winbtn" id="b-adv-POR" onclick="setAdv('POR')"><span class="flag">🇵🇹</span> PORTUGAL</button>
+              <button class="winbtn" id="b-adv-FRA" onclick="setAdv('FRA')"><span class="flag">🇫🇷</span> FRANCE</button>
+            </div>
+            <div class="divider"></div>
+            <div class="qlabel">HOW? <span class="opt-badge">+BONUS</span></div>
+            <div class="seg">
+              <div class="chip" id="b-how-FT" onclick="setHow('FT')">In 90′</div>
+              <div class="chip" id="b-how-ET" onclick="setHow('ET')">Extra time</div>
+              <div class="chip" id="b-how-PENS" onclick="setHow('PENS')">Penalties</div>
+            </div>
+            <div class="qlabel" style="margin-top:16px">PREDICT THE SCORE <span class="opt-badge">MORE POINTS</span></div>
+            <div class="teams" style="margin-top:2px">
+              <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+              <div class="stepper"><button onclick="bump('b','h',1)">+</button><div class="num" id="b-h">1</div><button onclick="bump('b','h',-1)">−</button></div>
+              <div class="colon">:</div>
+              <div class="stepper"><button onclick="bump('b','a',1)">+</button><div class="num" id="b-a">1</div><button onclick="bump('b','a',-1)">−</button></div>
+              <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
+            </div>
+            <div class="guard" id="b-guard"></div>
+            <button class="submit" id="b-submit" onclick="fakeSubmit('b')">SUBMIT PREDICTION</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-side">
+        <div class="panel">
+          <h3>Model B — who-goes-through is the headline</h3>
+          <p class="lead">Most explicit about the knockout essence: the advancing team is the first, mandatory pick, and penalties are just one plainly-labelled option. The cost is <b>three inputs that can disagree</b> — pick Portugal to go through, then select a France-winning score, and we have to step in. Try it: tap PORTUGAL, then dial the score to 1–2.</p>
+          <div class="pred-readout" id="b-readout"></div>
+        </div>
+        <div class="panel">
+          <h3>Live points preview</h3>
+          <p class="lead">Same scoring engine as Model A.</p>
+          <div class="actual-grid" id="b-actuals"></div>
+          <div class="score-out" id="b-score"></div>
+          <div class="rules-mini" id="b-rules"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== VIEW DASH ===================== -->
+  <div class="view" id="view-dash">
+    <div class="dash">
+      <div class="note-pill">This is the merchant's existing "Game Reward → Reward per predict" screen, with ONE new row added.</div>
+      <div class="dash-head"><h2>Game Reward</h2></div>
+      <p class="dash-sub">Set the points for each prediction outcome. The same mapping applies to every match in the game.</p>
+
+      <div class="drow"><div class="dhd">🟢 Exact score</div><div class="dbody"><div class="flabel">Score / prediction</div><input type="number" id="cfg-exact" value="3" oninput="cfgChange()"></div></div>
+      <div class="drow"><div class="dhd">🟣 Same goal diff</div><div class="dbody"><div class="flabel">Score / prediction</div><input type="number" id="cfg-diff" value="2" oninput="cfgChange()"></div></div>
+      <div class="drow"><div class="dhd">⚪ Correct winner</div><div class="dbody"><div class="flabel">Score / prediction</div><input type="number" id="cfg-winner" value="1" oninput="cfgChange()"></div></div>
+      <div class="drow"><div class="dhd">⚫ Participation</div><div class="dbody"><div class="flabel">Score / prediction</div><input type="number" id="cfg-part" value="0" oninput="cfgChange()"></div></div>
+
+      <div class="drow dnew">
+        <div class="dhd">🏆 Correct decider &nbsp;<span class="tagnew">NEW · KNOCKOUTS</span></div>
+        <div class="dbody">
+          <div class="flabel">Bonus / prediction</div>
+          <input type="number" id="cfg-decider" value="2" oninput="cfgChange()">
+          <div class="dhelp">Applies only to knockout matches. The player earns this <b>on top</b> of their score points when they correctly call how the match is decided — <b>Full Time vs Extra Time</b> on a winning prediction, or <b>who wins the shootout</b> on a draw prediction. Requires getting the winning/advancing side right.</div>
+        </div>
+      </div>
+
+      <div class="alts">
+        <h4>Why one new row (vs the alternatives we considered)</h4>
+        <table>
+          <tr><td class="k pick">One new row ✓</td><td>Reuses the exact mental model the merchant already knows (it's just another outcome tier). One field, configurable, no new concepts. <span class="pick">Recommended.</span></td></tr>
+          <tr><td class="k">Toggle + value</td><td>An on/off switch that reveals the field. Marginally tidier, but hides the mechanic and adds a state to reason about for no real gain.</td></tr>
+          <tr><td class="k">Automatic / fixed</td><td>Bake in a fixed bonus, zero setup. Lowest friction but the merchant can't tune it or zero it out — and they lose visibility that knockouts score differently.</td></tr>
+          <tr><td class="k">Per-stage config</td><td>Separate reward maps for group vs knockout. Most control, but it's a real complexity jump and contradicts today's "one mapping for the whole game" model.</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ----------------- shared state ----------------- */
+const DEFAULTS = {
+  cfg:{exact:3, diff:2, winner:1, part:0, decider:2},
+  a:{h:0, a:0, manner:null, pens:null, actual:2},   // actual index default → 1–1 POR pens
+  b:{adv:null, how:null, h:1, a:1, actual:2}
+};
+let S = JSON.parse(JSON.stringify(DEFAULTS));
+
+const TEAMS = {POR:{flag:'🇵🇹',name:'Portugal',short:'POR'}, FRA:{flag:'🇫🇷',name:'France',short:'FRA'}};
+
+const ACTUALS = [
+  {label:'POR win 2–1 — in Full Time',        h:2,a:1, by:'FT',  adv:'POR'},
+  {label:'POR win 2–1 — in Extra Time',       h:2,a:1, by:'ET',  adv:'POR'},
+  {label:'1–1 → POR win on penalties',        h:1,a:1, by:'PENS',adv:'POR'},
+  {label:'1–1 → FRA win on penalties',        h:1,a:1, by:'PENS',adv:'FRA'},
+  {label:'FRA win 1–2 — in Full Time',        h:1,a:2, by:'FT',  adv:'FRA'},
+];
+
+/* ----------------- scoring engine ----------------- */
+// pred normalized: {h,a, deciderType:'FT'|'ET'|'PENS'|null, advancer:'POR'|'FRA'|null}
+function score(pred, actual, cfg){
+  const pd = pred.h - pred.a, ad = actual.h - actual.a;
+  let base=0, baseLabel='Wrong — no points';
+  if(pred.h===actual.h && pred.a===actual.a){ base=cfg.exact; baseLabel='Exact score'; }
+  else if(pd===ad){ base=cfg.diff; baseLabel='Same goal difference'; }
+  else if(pd!==0 && ad!==0 && Math.sign(pd)===Math.sign(ad)){ base=cfg.winner; baseLabel='Correct winner'; }
+
+  let bonus=0, bonusLabel='No decider bonus';
+  if(pred.advancer && pred.deciderType && pred.advancer===actual.adv && pred.deciderType===actual.by){
+    bonus=cfg.decider;
+    bonusLabel = actual.by==='PENS' ? 'Correct penalty winner' : 'Correct '+(actual.by==='FT'?'Full Time':'Extra Time')+' call';
+  } else if (pred.advancer===actual.adv && pred.deciderType && pred.deciderType!==actual.by){
+    bonusLabel = 'Right team, wrong manner — no bonus';
+  } else if (pred.advancer && pred.advancer!==actual.adv){
+    bonusLabel = 'Wrong team through — no bonus';
+  }
+  return {base, baseLabel, bonus, bonusLabel, total:base+bonus};
+}
+
+/* ----------------- Model A ----------------- */
+function normA(){
+  const h=S.a.h, a=S.a.a;
+  if(h===a){ return {h,a, deciderType: S.a.pens? 'PENS':null, advancer:S.a.pens}; }
+  return {h,a, deciderType:S.a.manner, advancer: h>a?'POR':'FRA'};
+}
+function renderA(){
+  document.getElementById('a-h').textContent=S.a.h;
+  document.getElementById('a-a').textContent=S.a.a;
+  const draw = S.a.h===S.a.a;
+  const strip = document.getElementById('a-strip');
+  if(draw){
+    strip.innerHTML = `
+      <div class="qlabel">LEVEL AFTER EXTRA TIME — WHO GOES THROUGH ON PENALTIES?</div>
+      <div class="winsel">
+        <button class="winbtn ${S.a.pens==='POR'?'on':''}" onclick="setPens('POR')"><span class="flag">🇵🇹</span> POR</button>
+        <button class="winbtn ${S.a.pens==='FRA'?'on':''}" onclick="setPens('FRA')"><span class="flag">🇫🇷</span> FRA</button>
+      </div>`;
+  } else {
+    const w = S.a.h>S.a.a?'POR':'FRA';
+    strip.innerHTML = `
+      <div class="qlabel">${TEAMS[w].name.toUpperCase()} WIN — WHEN? <span class="opt-badge">OPTIONAL · +BONUS</span></div>
+      <div class="seg">
+        <div class="chip ${S.a.manner==='FT'?'on':''}" onclick="setManner('FT')">90 MIN</div>
+        <div class="chip ${S.a.manner==='ET'?'on':''}" onclick="setManner('ET')">EXTRA TIME</div>
+      </div>`;
+  }
+  // submit lock: a draw must name the pens winner
+  const submit=document.getElementById('a-submit');
+  submit.disabled = draw && !S.a.pens;
+  submit.textContent = (draw && !S.a.pens) ? 'PICK WHO ADVANCES' : 'SUBMIT PREDICTION';
+
+  // readout
+  const p=normA();
+  document.getElementById('a-readout').innerHTML = predText(p);
+  renderActuals('a');
+  renderScore('a', p);
+}
+
+/* ----------------- Model B ----------------- */
+function normB(){ return {h:S.b.h, a:S.b.a, deciderType:S.b.how, advancer:S.b.adv}; }
+function renderB(){
+  document.getElementById('b-h').textContent=S.b.h;
+  document.getElementById('b-a').textContent=S.b.a;
+  ['POR','FRA'].forEach(t=>document.getElementById('b-adv-'+t).classList.toggle('on',S.b.adv===t));
+  ['FT','ET','PENS'].forEach(h=>document.getElementById('b-how-'+h).classList.toggle('on',S.b.how===h));
+
+  // guards
+  const g=document.getElementById('b-guard'); let msg='';
+  const decisive = S.b.h!==S.b.a;
+  const scoreWinner = decisive ? (S.b.h>S.b.a?'POR':'FRA') : null;
+  if(!S.b.adv){ msg='Pick who goes through first.'; }
+  else if(S.b.how==='PENS' && decisive){ msg='Penalties only happen on a level score. Set the score level (e.g. 1–1) or change “How?”.'; }
+  else if((S.b.how==='FT'||S.b.how==='ET') && !decisive){ msg='A '+(S.b.how==='FT'?'90-minute':'extra-time')+' result can’t be a draw. Set a winning score or switch “How?” to Penalties.'; }
+  else if((S.b.how==='FT'||S.b.how==='ET') && scoreWinner!==S.b.adv){ msg='You picked '+TEAMS[S.b.adv].name+' to go through, but this score has '+TEAMS[scoreWinner].name+' winning. Adjust the score or switch who advances.'; }
+  g.className='guard'+(msg?' show':''); g.textContent=msg;
+  document.getElementById('b-submit').disabled = !!msg || !S.b.how;
+  document.getElementById('b-submit').textContent = msg ? 'FIX THE CONFLICT ABOVE' : 'SUBMIT PREDICTION';
+
+  document.getElementById('b-readout').innerHTML = predText(normB());
+  renderActuals('b');
+  renderScore('b', normB());
+}
+
+/* ----------------- shared rendering ----------------- */
+function predText(p){
+  if(!p.advancer && p.h===p.a) return 'Your prediction: <b>'+p.h+'–'+p.a+'</b> — pick who advances to complete it.';
+  const adv = p.advancer ? TEAMS[p.advancer].name : '—';
+  let how = p.deciderType==='FT'?'in normal time' : p.deciderType==='ET'?'in extra time' : p.deciderType==='PENS'?'on penalties' : '(manner not set)';
+  if(p.h===p.a){ return 'Your prediction: <b>'+p.h+'–'+p.a+'</b>, <b>'+adv+'</b> advance '+how+'.'; }
+  return 'Your prediction: <b>'+TEAMS.POR.short+' '+p.h+'–'+p.a+' '+TEAMS.FRA.short+'</b> ('+adv+' win '+how+').';
+}
+function renderActuals(view){
+  const el=document.getElementById(view+'-actuals');
+  el.innerHTML = ACTUALS.map((x,i)=>`<button class="actual-btn ${S[view].actual===i?'on':''}" onclick="setActual('${view}',${i})">⚽ ${x.label}</button>`).join('');
+}
+function renderScore(view, pred){
+  const actual = ACTUALS[S[view].actual];
+  const r = score(pred, actual, S.cfg);
+  const el=document.getElementById(view+'-score');
+  el.innerHTML = `
+    <div class="score-big"><span class="pts">${r.total}</span><span class="ptl">points if it ends “${actual.label}”</span></div>
+    <div class="breakdown">
+      <div class="row"><span>${r.baseLabel}</span><span>+${r.base}</span></div>
+      <div class="row"><span>${r.bonusLabel}</span><span>+${r.bonus}</span></div>
+      <div class="row tot"><span>Total</span><span>${r.total}</span></div>
+    </div>`;
+  document.getElementById(view+'-rules').innerHTML =
+    `Scoring (set in the dashboard): <code>${S.cfg.exact}</code> exact · <code>${S.cfg.diff}</code> same goal diff · <code>${S.cfg.winner}</code> correct winner · decider bonus <code>+${S.cfg.decider}</code>. Two different draws count as “same goal difference”.`;
+}
+
+/* ----------------- interactions ----------------- */
+function bump(view, side, d){
+  const k = side==='h'?'h':'a';
+  S[view][k] = Math.max(0, Math.min(9, S[view][k]+d));
+  if(view==='a'){ // reset the now-irrelevant follow-up when crossing draw/decisive
+    if(S.a.h===S.a.a){ S.a.manner=null; } else { S.a.pens=null; }
+  }
+  view==='a'?renderA():renderB();
+}
+function setManner(m){ S.a.manner = (S.a.manner===m?null:m); renderA(); }
+function setPens(t){ S.a.pens = t; renderA(); }
+function setActual(view,i){ S[view].actual=i; view==='a'?renderA():renderB(); }
+function setAdv(t){ S.b.adv = t; renderB(); }
+function setHow(h){ S.b.how = (S.b.how===h?null:h); renderB(); }
+function fakeSubmit(view){
+  const btn=document.getElementById(view+'-submit');
+  if(btn.disabled) return;
+  const old=btn.textContent; btn.textContent='✓ PREDICTION SAVED'; btn.style.background='#1f9d57';
+  setTimeout(()=>{btn.textContent=old; btn.style.background='';},1300);
+}
+
+/* ----------------- dashboard ----------------- */
+function cfgChange(){
+  S.cfg.exact = num('cfg-exact'); S.cfg.diff=num('cfg-diff'); S.cfg.winner=num('cfg-winner');
+  S.cfg.part=num('cfg-part'); S.cfg.decider=num('cfg-decider');
+}
+function num(id){ const v=parseInt(document.getElementById(id).value,10); return isNaN(v)?0:v; }
+
+/* ----------------- nav + reset ----------------- */
+function switchView(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.querySelector('.tab[data-view="'+v+'"]').classList.add('active');
+}
+function resetAll(){
+  S = JSON.parse(JSON.stringify(DEFAULTS));
+  document.getElementById('cfg-exact').value=S.cfg.exact;
+  document.getElementById('cfg-diff').value=S.cfg.diff;
+  document.getElementById('cfg-winner').value=S.cfg.winner;
+  document.getElementById('cfg-part').value=S.cfg.part;
+  document.getElementById('cfg-decider').value=S.cfg.decider;
+  renderA(); renderB();
+}
+
+/* ----------------- deep-link states (shareable + screenshots) ----------------- */
+function applyHash(){
+  const h=(location.hash||'').replace('#','');
+  if(h==='a-decisive'){ switchView('a'); S.a={h:2,a:1,manner:'FT',pens:null,actual:0}; renderA(); }
+  else if(h==='a-edge'){ switchView('a'); S.a={h:2,a:2,manner:null,pens:'POR',actual:2}; renderA(); }
+  else if(h==='b'){ switchView('b'); S.b={adv:'POR',how:'PENS',h:1,a:1,actual:2}; renderB(); }
+  else if(h==='b-guard'){ switchView('b'); S.b={adv:'POR',how:'FT',h:1,a:2,actual:2}; renderB(); }
+  else if(h==='dash'){ switchView('dash'); }
+  else if(h==='a'){ switchView('a'); }
+}
+window.addEventListener('hashchange', applyHash);
+renderA(); renderB(); applyHash();
+</script>
+</body>
+</html>
