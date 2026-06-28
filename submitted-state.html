@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Knockout — Submitted state · A vs B</title>
+<title>Knockout — Submitted prediction state</title>
 <style>
   /* ===== palette copied verbatim from index.html ===== */
   :root{
@@ -19,8 +19,8 @@
   .top p{margin:6px 0 0;font-size:13px;color:var(--muted);max-width:780px;line-height:1.5}
   .top .ctx{margin-top:10px;font-size:12.5px;background:#fff5ee;border:1px solid #f3d6bf;color:var(--orange-deep);border-radius:9px;padding:9px 12px;max-width:780px;line-height:1.5}
 
-  .wrap{max-width:880px;margin:24px auto 60px;padding:0 22px;}
-  .cols{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;}
+  .wrap{max-width:430px;margin:24px auto 60px;padding:0 22px;}
+  .cols{display:block}
   .colhead h2{margin:0;font-size:16px;display:flex;align-items:center;gap:8px}
   .colhead .pin{font-size:10px;font-weight:800;letter-spacing:.5px;border-radius:20px;padding:3px 9px}
   .pin.full{background:var(--orange);color:#fff}
@@ -29,7 +29,7 @@
   .statelabel{font-size:11px;font-weight:800;letter-spacing:.6px;color:var(--muted);margin:24px 0 10px;text-transform:uppercase}
 
   /* ===== phone shell — verbatim from index.html ===== */
-  .phone{width:360px;max-width:100%;background:linear-gradient(180deg,var(--green),var(--green-2));border-radius:30px;padding:16px 14px 20px;box-shadow:0 14px 40px rgba(0,0,0,.28);}
+  .phone{width:360px;max-width:100%;margin:0 auto;background:linear-gradient(180deg,var(--green),var(--green-2));border-radius:30px;padding:16px 14px 20px;box-shadow:0 14px 40px rgba(0,0,0,.28);}
   .phead{text-align:center;color:var(--gold);padding:6px 0 12px;}
   .phead .sub{font-size:10px;letter-spacing:2px;font-weight:700;opacity:.8}
   .phead .ttl{color:#fff;font-size:20px;font-weight:800;letter-spacing:.5px;margin-top:2px;}
@@ -95,21 +95,15 @@
 <body>
 
 <div class="top">
-  <h1>Knockout — “Submitted prediction” state · A vs B</h1>
-  <p>The gap: after submitting a knockout prediction, players could only see the score — never the decider they picked. The fix is the same in both options: after submit you always see <b>what you picked</b> — the score <b>and</b> your decider call (Full time, Extra time, or who wins on Penalties), in the same phone shell as the live editable card. <b>Try both and tell me which you prefer.</b></p>
+  <h1>Knockout — “Submitted prediction” state</h1>
+  <p>The gap: after submitting a knockout prediction, players could only see the score — never the decider they picked. The fix: after submit you always see <b>what you picked</b> — the score <b>and</b> your decider call (Full time, Extra time, or who wins on Penalties), in the same phone shell as the live editable card.</p>
   <div class="ctx">The decider bonus is the merchant’s setting, so no amount is shown here. It only affects the nudge for skipping the optional call — it never affects whether your pick is shown. With no bonus, the nudge simply doesn’t appear.</div>
 </div>
 
 <div class="wrap">
   <div class="cols">
 
-    <!-- ============ OPTION A ============ -->
     <div>
-      <div class="colhead">
-        <h2>Option A <span class="pin full">RECOMMENDED</span></h2>
-        <p>Read-only summary showing the pick + (when a bonus exists) a nudge if the player skipped the optional decider + a post-kick-off locked state.</p>
-      </div>
-
       <div class="statelabel">Decisive result — submitted</div>
       <div class="phone">
         <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
@@ -183,70 +177,11 @@
       </div>
     </div>
 
-    <!-- ============ OPTION B ============ -->
-    <div>
-      <div class="colhead">
-        <h2>Option B <span class="pin min">MINIMAL</span></h2>
-        <p>Closes the exact gap, nothing more: read-only scoreline + the pick + an Edit button. No nudge, no lock framing.</p>
-      </div>
-
-      <div class="statelabel">Decisive result — submitted</div>
-      <div class="phone">
-        <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
-        <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
-        <div class="mc">
-          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="status sub"><span class="ic">✓</span>Submitted</span></div>
-          <div class="teams">
-            <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
-            <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
-            <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
-          </div>
-          <div class="divider"></div>
-          <div class="pick"><div class="lbl">Your decider call</div><div class="val">Extra time</div></div>
-          <button class="edit wide">Edit prediction</button>
-        </div>
-      </div>
-
-      <div class="statelabel">Draw — penalties</div>
-      <div class="phone">
-        <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
-        <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
-        <div class="mc">
-          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="status sub"><span class="ic">✓</span>Submitted</span></div>
-          <div class="teams">
-            <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
-            <div class="center-score"><span class="num">1</span><span class="colon">:</span><span class="num">1</span></div>
-            <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
-          </div>
-          <div class="divider"></div>
-          <div class="pick"><div class="lbl">Your decider call</div><div class="val">Penalties<span class="sub">Portugal to advance</span></div></div>
-          <button class="edit wide">Edit prediction</button>
-        </div>
-      </div>
-
-      <div class="statelabel">Locked — after kick-off</div>
-      <div class="phone">
-        <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
-        <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
-        <div class="mc">
-          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="status live">● LIVE</span></div>
-          <div class="teams">
-            <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
-            <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
-            <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
-          </div>
-          <div class="divider"></div>
-          <div class="pick"><div class="lbl">Your decider call</div><div class="val">Full time</div></div>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <div class="legend">
-    <b>How to read this:</b> both options reuse the real phone shell, header, stats and card — only the body changes after submit. The fix in both: <b>your pick is always visible</b> — the scoreline plus your decider call (Full time / Extra time / Penalties + who advances), as plain labelled text.<br><br>
-    <b>Option A</b> adds two things: a <b>nudge</b> when the player skipped the optional Full/Extra-time call (prompts them to add it for the bonus — no amount shown here, since that’s the merchant’s setting; with no bonus the nudge doesn’t appear), and a distinct <b>locked</b> state once the match kicks off. <b>Option B</b> ships lighter — just the pick + Edit.<br><br>
-    My vote is <b>A</b> — the nudge recovers bonus points players would otherwise leave on the table, which is the whole reason the decider exists.
+    <b>How to read this:</b> the card reuses the real phone shell, header, stats and card — only the body changes after submit. The fix: <b>your pick is always visible</b> — the scoreline plus your decider call (Full time / Extra time / Penalties + who advances), as plain labelled text. The status sits top-right (✓ Submitted → ● Live), consistent across states.<br><br>
+    Two extras worth keeping: a <b>nudge</b> when the player skipped the optional Full/Extra-time call (prompts them to add it for the bonus — no amount shown here, since that’s the merchant’s setting; with no bonus the nudge doesn’t appear), and a distinct <b>locked</b> state once the match kicks off.
   </div>
 </div>
 
