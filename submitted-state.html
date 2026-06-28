@@ -96,7 +96,7 @@
 <div class="top">
   <h1>Knockout — “Submitted prediction” state · A vs B</h1>
   <p>The gap: after submitting a knockout prediction, players could only see the score — never the decider they picked. The fix is the same in both options: after submit you always see <b>what you picked</b> — the score <b>and</b> your decider call (Full time, Extra time, or who wins on Penalties), in the same phone shell as the live editable card. <b>Try both and tell me which you prefer.</b></p>
-  <div class="ctx">The decider bonus is the merchant’s setting. It only affects the “+N” nudge for skipping the optional call — it never affects whether your pick is shown. With no bonus, the nudge simply doesn’t appear.</div>
+  <div class="ctx">The decider bonus is the merchant’s setting, so no amount is shown here. It only affects the nudge for skipping the optional call — it never affects whether your pick is shown. With no bonus, the nudge simply doesn’t appear.</div>
 </div>
 
 <div class="wrap">
@@ -160,7 +160,7 @@
           <div class="divider"></div>
           <div class="pick"><div class="lbl">Your decider call</div><div class="val" style="color:var(--muted)">Not called yet</div></div>
           <div class="nudge" style="margin-top:12px">
-            <div class="row1"><span class="opt-badge">+2 BONUS</span><span>You called Portugal to win, but not <b>how</b>.</span></div>
+            <div class="row1"><span class="opt-badge">BONUS</span><span>You called Portugal to win, but not <b>how</b>.</span></div>
             <a href="#">+ Add Full / Extra Time</a>
           </div>
           <div class="foot"><div class="lockinfo">Editable until kick-off<br><b>1H 5M left</b></div><button class="edit">Edit</button></div>
@@ -251,7 +251,7 @@
 
   <div class="legend">
     <b>How to read this:</b> both options reuse the real phone shell, header, stats and card — only the body changes after submit. The fix in both: <b>your pick is always visible</b> — the scoreline plus your decider call (Full time / Extra time / Penalties + who advances), as plain labelled text.<br><br>
-    <b>Option A</b> adds two things: a <b>nudge</b> when the player skipped the optional Full/Extra-time call (recovers the merchant’s bonus — the “+2” shown is whatever the merchant configured; with no bonus the nudge doesn’t appear), and a distinct <b>locked</b> state once the match kicks off. <b>Option B</b> ships lighter — just the pick + Edit.<br><br>
+    <b>Option A</b> adds two things: a <b>nudge</b> when the player skipped the optional Full/Extra-time call (prompts them to add it for the bonus — no amount shown here, since that’s the merchant’s setting; with no bonus the nudge doesn’t appear), and a distinct <b>locked</b> state once the match kicks off. <b>Option B</b> ships lighter — just the pick + Edit.<br><br>
     My vote is <b>A</b> — the nudge recovers bonus points players would otherwise leave on the table, which is the whole reason the decider exists.
   </div>
 </div>
