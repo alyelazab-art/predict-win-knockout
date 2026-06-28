@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knockout — Submitted state · A vs B</title>
+<style>
+  /* ===== palette copied verbatim from index.html ===== */
+  :root{
+    --green:#0f3d2e; --green-2:#0c3328; --gold:#e4c45f; --gold-deep:#d8b24a;
+    --ink:#14241c; --card:#fbfaf5; --muted:#7c8a82; --line:#e2e6e1;
+    --orange:#e0732f; --orange-deep:#b5571c; --chipline:#d4dad5;
+    --good:#1f9d57; --bad:#cf3b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#eef1ee;color:var(--ink);}
+  .top{background:#fff;border-bottom:1px solid var(--line);padding:16px 24px;}
+  .top h1{margin:0;font-size:18px;}
+  .top p{margin:6px 0 0;font-size:13px;color:var(--muted);max-width:780px;line-height:1.5}
+  .top .ctx{margin-top:10px;font-size:12.5px;background:#fff5ee;border:1px solid #f3d6bf;color:var(--orange-deep);border-radius:9px;padding:9px 12px;max-width:780px;line-height:1.5}
+  .wrap{max-width:880px;margin:26px auto 60px;padding:0 22px;}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;}
+  .colhead h2{margin:0;font-size:16px;display:flex;align-items:center;gap:8px}
+  .colhead .pin{font-size:10px;font-weight:800;letter-spacing:.5px;border-radius:20px;padding:3px 9px}
+  .pin.full{background:var(--orange);color:#fff}
+  .pin.min{background:#e7eae6;color:#4a574f}
+  .colhead p{margin:5px 0 0;font-size:12px;color:var(--muted);line-height:1.5;min-height:48px}
+  .statelabel{font-size:11px;font-weight:800;letter-spacing:.6px;color:var(--muted);margin:24px 0 10px;text-transform:uppercase}
+
+  /* ===== phone shell — verbatim from index.html ===== */
+  .phone{width:360px;max-width:100%;background:linear-gradient(180deg,var(--green),var(--green-2));border-radius:30px;padding:16px 14px 20px;box-shadow:0 14px 40px rgba(0,0,0,.28);}
+  .phead{text-align:center;color:var(--gold);padding:6px 0 12px;}
+  .phead .sub{font-size:10px;letter-spacing:2px;font-weight:700;opacity:.8}
+  .phead .ttl{color:#fff;font-size:20px;font-weight:800;letter-spacing:.5px;margin-top:2px;}
+  .stats{display:flex;gap:8px;margin:4px 4px 14px;}
+  .stat{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:9px 6px;text-align:center;}
+  .stat.lead{background:var(--gold);border-color:var(--gold);}
+  .stat .n{font-size:18px;font-weight:800;color:#fff}
+  .stat.lead .n{color:#3a2d05}
+  .stat .l{font-size:8px;letter-spacing:1px;font-weight:700;color:rgba(255,255,255,.7);margin-top:2px}
+  .stat.lead .l{color:#5b4a14}
+
+  /* ===== match card — verbatim base ===== */
+  .mc{background:var(--card);border-radius:18px;padding:16px;}
+  .mc .stagerow{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .stage{display:inline-block;border:1px solid var(--chipline);border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.5px;padding:4px 10px;color:#33433b;}
+  .ko-time{font-size:10px;color:var(--muted);font-weight:600}
+  .teams{display:flex;align-items:center;justify-content:space-between;margin:16px 4px 6px;}
+  .team{text-align:center;width:74px}
+  .team .flag{font-size:30px;line-height:1}
+  .team .nm{font-size:12px;font-weight:800;margin-top:4px}
+  .colon{font-size:20px;font-weight:800;color:#aab4ad}
+  /* read-only score: the exact .num block from index.html, no steppers */
+  .num{width:54px;height:50px;background:var(--ink);color:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800}
+  .center-score{display:flex;align-items:center;gap:10px}
+  .divider{height:1px;background:var(--line);margin:14px 0 12px}
+  .opt-badge{font-size:8.5px;font-weight:800;color:#5f8a5f;background:#edf6ed;border:1px solid #cfe3cf;border-radius:10px;padding:1px 7px;letter-spacing:.5px}
+
+  /* ===== submitted-state pieces (built only from existing tokens) ===== */
+  .subhead{display:flex;align-items:center;gap:8px;margin:2px 2px 2px;font-size:11px;font-weight:800;letter-spacing:.6px;color:var(--good);}
+  .subhead.lock{color:#6b7a72}
+  .subhead .ic{width:18px;height:18px;border-radius:50%;background:var(--good);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px}
+  .subhead.lock .ic{background:#6b7a72}
+
+  /* decider summary — echoes the player's own selection treatment from the editable strip */
+  .dsum-ft{display:flex;align-items:center;gap:9px;background:var(--ink);color:#fff;border-radius:11px;padding:11px 13px;font-size:12.5px;font-weight:800;}
+  .dsum-none{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--chipline);color:var(--muted);border-radius:11px;padding:11px 13px;font-size:12.5px;font-weight:700;}
+  .dsum-ft .em,.dsum-none .em{font-size:15px}
+
+  /* skipped-decider nudge (Full only) — uses the existing green bonus pill, orange primary action */
+  .nudge{margin:2px 0 0;border-radius:11px;padding:11px 13px;background:#fff;border:1px dashed var(--chipline);font-size:12px;line-height:1.5;color:#3a473f;font-weight:600}
+  .nudge .row1{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+  .nudge a{display:inline-block;font-weight:800;color:#fff;background:var(--orange);text-decoration:none;border-radius:9px;padding:8px 13px;font-size:11.5px;letter-spacing:.3px}
+
+  /* footer + edit (Edit = secondary outline; primary action colour stays orange = submit) */
+  .foot{display:flex;align-items:center;justify-content:space-between;margin-top:15px;padding-top:13px;border-top:1px dashed var(--line)}
+  .foot .lockinfo{font-size:11px;color:var(--muted);font-weight:600;line-height:1.45}
+  .foot .lockinfo b{color:#3a473f}
+  .edit{border:1.5px solid var(--ink);background:#fff;color:var(--ink);border-radius:11px;padding:10px 18px;font-size:12.5px;font-weight:800;cursor:pointer}
+  .edit.wide{width:100%;text-align:center;margin-top:14px}
+
+  .legend{margin-top:8px;font-size:12.5px;color:#3a473f;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;line-height:1.65}
+  .legend b{color:var(--ink)}
+
+  /* ===== responsive: stack columns on phones (A first) so Slack links open clean ===== */
+  @media (max-width:760px){
+    .cols{grid-template-columns:1fr;gap:34px}
+    .wrap{padding:0 16px;margin-top:18px}
+    .colhead p{min-height:0}
+    .phone{margin:0 auto}
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>Knockout — “Submitted prediction” state · A vs B</h1>
+  <p>The gap: after submitting a knockout prediction, players could only see the score — never the decider (was it extra time? penalties?). They had to re-open edit just to check. Both options below fix that — the decider is now visible after submit, sitting in the same phone shell, header and stats as the live editable card. <b>Try both and tell me which you prefer.</b></p>
+  <div class="ctx">Reading the cards: the dark-ink pill is the player’s decider answer, frozen exactly as they tapped it while editing (here: Portugal in Extra Time).</div>
+</div>
+
+<div class="wrap">
+  <div class="cols">
+
+    <!-- ============ FULL ============ -->
+    <div>
+      <div class="colhead">
+        <h2>Option A <span class="pin full">RECOMMENDED</span></h2>
+        <p>Read-only summary + decider line + a nudge when the player skips the optional decider + a post-kick-off locked state.</p>
+      </div>
+
+      <div class="statelabel">Decisive result — decider called</div>
+      <div class="phone">
+        <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+        <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
+        <div class="mc">
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+          <div class="teams">
+            <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+            <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
+            <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
+          </div>
+          <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
+          <div class="divider"></div>
+          <div class="dsum-ft"><span class="em">⏱</span>Portugal win in Extra Time</div>
+          <div class="foot"><div class="lockinfo">Editable until kick-off<br><b>1H 5M left</b></div><button class="edit">Edit</button></div>
+        </div>
+      </div>
+
+      <div class="statelabel">Decisive — decider skipped (optional)</div>
+      <div class="phone">
+        <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+        <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
+        <div class="mc">
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+          <div class="teams">
+            <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+            <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
+            <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
+          </div>
+          <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
+          <div class="divider"></div>
+          <div class="nudge">
+            <div class="row1"><span class="opt-badge">+2 BONUS</span><span>You called Portugal to win, but not <b>how</b>.</span></div>
+            <a href="#">+ Add Full / Extra Time</a>
+          </div>
+          <div class="foot"><div class="lockinfo">Editable until kick-off<br><b>1H 5M left</b></div><button class="edit">Edit</button></div>
+        </div>
+      </div>
+
+      <div class="statelabel">Locked — after kick-off</div>
+      <div class="phone">
+        <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+        <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
+        <div class="mc">
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time" style="color:var(--bad);font-weight:800">● LIVE</span></div>
+          <div class="teams">
+            <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+            <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
+            <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
+          </div>
+          <div class="subhead lock"><span class="ic">🔒</span>PREDICTION LOCKED</div>
+          <div class="divider"></div>
+          <div class="dsum-ft"><span class="em">⏱</span>Portugal win in Extra Time</div>
+          <div class="foot" style="justify-content:flex-start"><div class="lockinfo">Match in progress — results settle at full time.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ MINIMAL ============ -->
+    <div>
+      <div class="colhead">
+        <h2>Option B <span class="pin min">MINIMAL</span></h2>
+        <p>Closes the exact gap, nothing more: read-only scoreline + decider line + an Edit button. No nudge, no lock framing.</p>
+      </div>
+
+      <div class="statelabel">Decisive result — decider called</div>
+      <div class="phone">
+        <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+        <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
+        <div class="mc">
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+          <div class="teams">
+            <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+            <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
+            <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
+          </div>
+          <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
+          <div class="divider"></div>
+          <div class="dsum-ft"><span class="em">⏱</span>Portugal win in Extra Time</div>
+          <button class="edit wide">Edit prediction</button>
+        </div>
+      </div>
+
+      <div class="statelabel">Decisive — decider skipped (optional)</div>
+      <div class="phone">
+        <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+        <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
+        <div class="mc">
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+          <div class="teams">
+            <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+            <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
+            <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
+          </div>
+          <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
+          <div class="divider"></div>
+          <div class="dsum-none"><span class="em">—</span>Decider not called</div>
+          <button class="edit wide">Edit prediction</button>
+        </div>
+      </div>
+
+      <div class="statelabel">Locked — after kick-off</div>
+      <div class="phone">
+        <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+        <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
+        <div class="mc">
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time" style="color:var(--bad);font-weight:800">● LIVE</span></div>
+          <div class="teams">
+            <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+            <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
+            <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
+          </div>
+          <div class="subhead lock"><span class="ic">🔒</span>PREDICTION LOCKED</div>
+          <div class="divider"></div>
+          <div class="dsum-ft"><span class="em">⏱</span>Portugal win in Extra Time</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="legend">
+    <b>How to read this:</b> both options reuse the real phone shell, header, stats and card — only the body changes after submit, and the decider is finally visible (the fix).<br><br>
+    <b>Option A</b> adds the <b>skipped-decider nudge</b> that recovers the optional +2 bonus, plus a distinct <b>locked</b> state once the match kicks off. <b>Option B</b> ships lighter — a skipped decider just reads “not called,” and the locked state simply drops the Edit button.<br><br>
+    My vote is <b>A</b> — the nudge quietly recovers bonus points players would otherwise leave on the table, which is the whole reason the decider exists.
+  </div>
+</div>
+
+</body>
+</html>
