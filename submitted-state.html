@@ -57,10 +57,11 @@
   .opt-badge{font-size:8.5px;font-weight:800;color:#5f8a5f;background:#edf6ed;border:1px solid #cfe3cf;border-radius:10px;padding:1px 7px;letter-spacing:.5px}
 
   /* ===== submitted-state pieces ===== */
-  .subhead{display:flex;align-items:center;gap:8px;margin:2px 2px 2px;font-size:11px;font-weight:800;letter-spacing:.6px;color:var(--good);}
-  .subhead.lock{color:#6b7a72}
-  .subhead .ic{width:18px;height:18px;border-radius:50%;background:var(--good);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px}
-  .subhead.lock .ic{background:#6b7a72}
+  /* status tag — lives top-right in the stagerow, consistent across states */
+  .status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;letter-spacing:.3px}
+  .status.sub{color:var(--good)}
+  .status.sub .ic{width:15px;height:15px;border-radius:50%;background:var(--good);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px}
+  .status.live{color:var(--bad)}
 
   /* the pick — what the player chose, shown as a labelled value (no emoji) */
   .pick{margin-top:4px}
@@ -114,13 +115,12 @@
         <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
         <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
         <div class="mc">
-          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="status sub"><span class="ic">✓</span>Submitted</span></div>
           <div class="teams">
             <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
             <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
             <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
-          <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
           <div class="divider"></div>
           <div class="pick"><div class="lbl">Your decider call</div><div class="val">Extra time</div></div>
           <div class="foot"><div class="lockinfo">Editable until kick-off<br><b>1H 5M left</b></div><button class="edit">Edit</button></div>
@@ -132,13 +132,12 @@
         <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
         <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
         <div class="mc">
-          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="status sub"><span class="ic">✓</span>Submitted</span></div>
           <div class="teams">
             <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
             <div class="center-score"><span class="num">1</span><span class="colon">:</span><span class="num">1</span></div>
             <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
-          <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
           <div class="divider"></div>
           <div class="pick"><div class="lbl">Your decider call</div><div class="val">Penalties<span class="sub">Portugal to advance</span></div></div>
           <div class="foot"><div class="lockinfo">Editable until kick-off<br><b>1H 5M left</b></div><button class="edit">Edit</button></div>
@@ -150,13 +149,12 @@
         <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
         <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
         <div class="mc">
-          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="status sub"><span class="ic">✓</span>Submitted</span></div>
           <div class="teams">
             <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
             <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
             <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
-          <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
           <div class="divider"></div>
           <div class="pick"><div class="lbl">Your decider call</div><div class="val" style="color:var(--muted)">Not called yet</div></div>
           <div class="nudge" style="margin-top:12px">
@@ -172,13 +170,12 @@
         <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
         <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
         <div class="mc">
-          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time" style="color:var(--bad);font-weight:800">● LIVE</span></div>
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="status live">● LIVE</span></div>
           <div class="teams">
             <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
             <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
             <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
-          <div class="subhead lock"><span class="ic">🔒</span>PREDICTION LOCKED</div>
           <div class="divider"></div>
           <div class="pick"><div class="lbl">Your decider call</div><div class="val">Full time</div></div>
           <div class="foot" style="justify-content:flex-start"><div class="lockinfo">Match in progress — results settle at full time.</div></div>
@@ -198,13 +195,12 @@
         <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
         <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
         <div class="mc">
-          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="status sub"><span class="ic">✓</span>Submitted</span></div>
           <div class="teams">
             <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
             <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
             <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
-          <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
           <div class="divider"></div>
           <div class="pick"><div class="lbl">Your decider call</div><div class="val">Extra time</div></div>
           <button class="edit wide">Edit prediction</button>
@@ -216,13 +212,12 @@
         <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
         <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
         <div class="mc">
-          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="status sub"><span class="ic">✓</span>Submitted</span></div>
           <div class="teams">
             <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
             <div class="center-score"><span class="num">1</span><span class="colon">:</span><span class="num">1</span></div>
             <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
-          <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
           <div class="divider"></div>
           <div class="pick"><div class="lbl">Your decider call</div><div class="val">Penalties<span class="sub">Portugal to advance</span></div></div>
           <button class="edit wide">Edit prediction</button>
@@ -234,13 +229,12 @@
         <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
         <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
         <div class="mc">
-          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time" style="color:var(--bad);font-weight:800">● LIVE</span></div>
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="status live">● LIVE</span></div>
           <div class="teams">
             <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
             <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
             <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
-          <div class="subhead lock"><span class="ic">🔒</span>PREDICTION LOCKED</div>
           <div class="divider"></div>
           <div class="pick"><div class="lbl">Your decider call</div><div class="val">Full time</div></div>
         </div>
