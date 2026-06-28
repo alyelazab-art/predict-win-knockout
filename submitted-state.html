@@ -19,14 +19,7 @@
   .top p{margin:6px 0 0;font-size:13px;color:var(--muted);max-width:780px;line-height:1.5}
   .top .ctx{margin-top:10px;font-size:12.5px;background:#fff5ee;border:1px solid #f3d6bf;color:var(--orange-deep);border-radius:9px;padding:9px 12px;max-width:780px;line-height:1.5}
 
-  /* bonus toggle */
-  .bonusctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;font-size:12.5px;font-weight:700;color:#3a473f}
-  .bonusctl .seg{display:inline-flex;border:1px solid var(--chipline);border-radius:10px;overflow:hidden}
-  .bbtn{border:none;background:#fff;color:#4a574f;font-size:12.5px;font-weight:800;padding:8px 14px;cursor:pointer}
-  .bbtn.active{background:var(--ink);color:#fff}
-  .bonusctl .hint{color:var(--muted);font-weight:600}
-
-  .wrap{max-width:880px;margin:22px auto 60px;padding:0 22px;}
+  .wrap{max-width:880px;margin:24px auto 60px;padding:0 22px;}
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;}
   .colhead h2{margin:0;font-size:16px;display:flex;align-items:center;gap:8px}
   .colhead .pin{font-size:10px;font-weight:800;letter-spacing:.5px;border-radius:20px;padding:3px 9px}
@@ -63,16 +56,19 @@
   .divider{height:1px;background:var(--line);margin:14px 0 12px}
   .opt-badge{font-size:8.5px;font-weight:800;color:#5f8a5f;background:#edf6ed;border:1px solid #cfe3cf;border-radius:10px;padding:1px 7px;letter-spacing:.5px}
 
-  /* ===== submitted-state pieces (built only from existing tokens) ===== */
+  /* ===== submitted-state pieces ===== */
   .subhead{display:flex;align-items:center;gap:8px;margin:2px 2px 2px;font-size:11px;font-weight:800;letter-spacing:.6px;color:var(--good);}
   .subhead.lock{color:#6b7a72}
   .subhead .ic{width:18px;height:18px;border-radius:50%;background:var(--good);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px}
   .subhead.lock .ic{background:#6b7a72}
 
-  .dsum-ft{display:flex;align-items:center;gap:9px;background:var(--ink);color:#fff;border-radius:11px;padding:11px 13px;font-size:12.5px;font-weight:800;}
-  .dsum-none{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--chipline);color:var(--muted);border-radius:11px;padding:11px 13px;font-size:12.5px;font-weight:700;}
-  .dsum-ft .em,.dsum-none .em{font-size:15px}
+  /* the pick — what the player chose, shown as a labelled value (no emoji) */
+  .pick{margin-top:4px}
+  .pick .lbl{font-size:10px;letter-spacing:.7px;font-weight:800;color:var(--muted);text-transform:uppercase;margin-bottom:5px}
+  .pick .val{font-size:17px;font-weight:800;color:var(--ink);line-height:1.2}
+  .pick .val .sub{display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin-top:2px}
 
+  /* skipped-decider nudge */
   .nudge{margin:2px 0 0;border-radius:11px;padding:11px 13px;background:#fff;border:1px dashed var(--chipline);font-size:12px;line-height:1.5;color:#3a473f;font-weight:600}
   .nudge .row1{display:flex;align-items:center;gap:7px;margin-bottom:8px}
   .nudge a{display:inline-block;font-weight:800;color:#fff;background:var(--orange);text-decoration:none;border-radius:9px;padding:8px 13px;font-size:11.5px;letter-spacing:.3px}
@@ -83,17 +79,8 @@
   .edit{border:1.5px solid var(--ink);background:#fff;color:var(--ink);border-radius:11px;padding:10px 18px;font-size:12.5px;font-weight:800;cursor:pointer}
   .edit.wide{width:100%;text-align:center;margin-top:14px}
 
-  /* note card shown only in the no-bonus configuration */
-  .casenote{background:#fff;border:1px dashed var(--chipline);border-radius:14px;padding:14px 16px;font-size:12.5px;color:#3a473f;line-height:1.55}
-  .casenote b{color:var(--ink)}
-
   .legend{margin-top:8px;font-size:12.5px;color:#3a473f;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;line-height:1.65}
   .legend b{color:var(--ink)}
-
-  /* ===== bonus on/off conditional visibility ===== */
-  .nobonus-only{display:none}
-  body.nobonus .bonus-only{display:none}
-  body.nobonus .nobonus-only{display:block}
 
   /* ===== responsive: stack columns on phones (A first) ===== */
   @media (max-width:760px){
@@ -108,16 +95,8 @@
 
 <div class="top">
   <h1>Knockout — “Submitted prediction” state · A vs B</h1>
-  <p>The gap: after submitting a knockout prediction, players could only see the score — never the decider (extra time? penalties?). They had to re-open edit just to check. Both options below fix that. <b>Try both and tell me which you prefer.</b></p>
-  <div class="ctx">The decider bonus is set by the merchant and can be switched off. The optional “how did it end” call only exists to earn that bonus — so when there’s no bonus, it (and the “+2”) shouldn’t show. Toggle below to see both.</div>
-  <div class="bonusctl">
-    <span>Merchant decider bonus:</span>
-    <span class="seg">
-      <button class="bbtn active" data-mode="on">On · +2</button>
-      <button class="bbtn" data-mode="off">Off · no bonus</button>
-    </span>
-    <span class="hint">(the “+2” reflects whatever the merchant configured)</span>
-  </div>
+  <p>The gap: after submitting a knockout prediction, players could only see the score — never the decider they picked. The fix is the same in both options: after submit you always see <b>what you picked</b> — the score <b>and</b> your decider call (Full time, Extra time, or who wins on Penalties), in the same phone shell as the live editable card. <b>Try both and tell me which you prefer.</b></p>
+  <div class="ctx">The decider bonus is the merchant’s setting. It only affects the “+N” nudge for skipping the optional call — it never affects whether your pick is shown. With no bonus, the nudge simply doesn’t appear.</div>
 </div>
 
 <div class="wrap">
@@ -127,7 +106,7 @@
     <div>
       <div class="colhead">
         <h2>Option A <span class="pin full">RECOMMENDED</span></h2>
-        <p>Read-only summary + decider line + (when a bonus exists) a nudge if the player skipped the optional decider + a post-kick-off locked state.</p>
+        <p>Read-only summary showing the pick + (when a bonus exists) a nudge if the player skipped the optional decider + a post-kick-off locked state.</p>
       </div>
 
       <div class="statelabel">Decisive result — submitted</div>
@@ -142,39 +121,50 @@
             <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
           <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
-          <!-- decider line only exists when there's a bonus to earn -->
-          <div class="bonus-only"><div class="divider"></div><div class="dsum-ft"><span class="em">⏱</span>Portugal win in Extra Time</div></div>
+          <div class="divider"></div>
+          <div class="pick"><div class="lbl">Your decider call</div><div class="val">Extra time</div></div>
           <div class="foot"><div class="lockinfo">Editable until kick-off<br><b>1H 5M left</b></div><button class="edit">Edit</button></div>
         </div>
       </div>
 
-      <!-- skipped-decider only happens when there IS an optional decider, i.e. a bonus exists -->
-      <div class="bonus-only">
-        <div class="statelabel">Decisive — decider skipped (optional)</div>
-        <div class="phone">
-          <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
-          <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
-          <div class="mc">
-            <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
-            <div class="teams">
-              <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
-              <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
-              <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
-            </div>
-            <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
-            <div class="divider"></div>
-            <div class="nudge">
-              <div class="row1"><span class="opt-badge">+2 BONUS</span><span>You called Portugal to win, but not <b>how</b>.</span></div>
-              <a href="#">+ Add Full / Extra Time</a>
-            </div>
-            <div class="foot"><div class="lockinfo">Editable until kick-off<br><b>1H 5M left</b></div><button class="edit">Edit</button></div>
+      <div class="statelabel">Draw — penalties</div>
+      <div class="phone">
+        <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+        <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
+        <div class="mc">
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+          <div class="teams">
+            <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+            <div class="center-score"><span class="num">1</span><span class="colon">:</span><span class="num">1</span></div>
+            <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
+          <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
+          <div class="divider"></div>
+          <div class="pick"><div class="lbl">Your decider call</div><div class="val">Penalties<span class="sub">Portugal to advance</span></div></div>
+          <div class="foot"><div class="lockinfo">Editable until kick-off<br><b>1H 5M left</b></div><button class="edit">Edit</button></div>
         </div>
       </div>
-      <!-- with no bonus, there's nothing optional to skip -->
-      <div class="nobonus-only">
-        <div class="statelabel">Decisive — decider skipped</div>
-        <div class="casenote"><b>No state here.</b> With no bonus configured, there’s no optional “how it ended” call to skip — a decisive prediction is just the scoreline (the card above).</div>
+
+      <div class="statelabel">Decisive — decider skipped (optional)</div>
+      <div class="phone">
+        <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+        <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
+        <div class="mc">
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+          <div class="teams">
+            <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+            <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
+            <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
+          </div>
+          <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
+          <div class="divider"></div>
+          <div class="pick"><div class="lbl">Your decider call</div><div class="val" style="color:var(--muted)">Not called yet</div></div>
+          <div class="nudge" style="margin-top:12px">
+            <div class="row1"><span class="opt-badge">+2 BONUS</span><span>You called Portugal to win, but not <b>how</b>.</span></div>
+            <a href="#">+ Add Full / Extra Time</a>
+          </div>
+          <div class="foot"><div class="lockinfo">Editable until kick-off<br><b>1H 5M left</b></div><button class="edit">Edit</button></div>
+        </div>
       </div>
 
       <div class="statelabel">Locked — after kick-off</div>
@@ -189,7 +179,8 @@
             <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
           <div class="subhead lock"><span class="ic">🔒</span>PREDICTION LOCKED</div>
-          <div class="bonus-only"><div class="divider"></div><div class="dsum-ft"><span class="em">⏱</span>Portugal win in Extra Time</div></div>
+          <div class="divider"></div>
+          <div class="pick"><div class="lbl">Your decider call</div><div class="val">Full time</div></div>
           <div class="foot" style="justify-content:flex-start"><div class="lockinfo">Match in progress — results settle at full time.</div></div>
         </div>
       </div>
@@ -199,7 +190,7 @@
     <div>
       <div class="colhead">
         <h2>Option B <span class="pin min">MINIMAL</span></h2>
-        <p>Closes the exact gap, nothing more: read-only scoreline + decider line + an Edit button. No nudge, no lock framing.</p>
+        <p>Closes the exact gap, nothing more: read-only scoreline + the pick + an Edit button. No nudge, no lock framing.</p>
       </div>
 
       <div class="statelabel">Decisive result — submitted</div>
@@ -214,33 +205,28 @@
             <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
           <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
-          <div class="bonus-only"><div class="divider"></div><div class="dsum-ft"><span class="em">⏱</span>Portugal win in Extra Time</div></div>
+          <div class="divider"></div>
+          <div class="pick"><div class="lbl">Your decider call</div><div class="val">Extra time</div></div>
           <button class="edit wide">Edit prediction</button>
         </div>
       </div>
 
-      <div class="bonus-only">
-        <div class="statelabel">Decisive — decider skipped (optional)</div>
-        <div class="phone">
-          <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
-          <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
-          <div class="mc">
-            <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
-            <div class="teams">
-              <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
-              <div class="center-score"><span class="num">2</span><span class="colon">:</span><span class="num">1</span></div>
-              <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
-            </div>
-            <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
-            <div class="divider"></div>
-            <div class="dsum-none"><span class="em">—</span>Decider not called</div>
-            <button class="edit wide">Edit prediction</button>
+      <div class="statelabel">Draw — penalties</div>
+      <div class="phone">
+        <div class="phead"><div class="sub">WORLD CUP 2026</div><div class="ttl">PREDICT &amp; WIN</div></div>
+        <div class="stats"><div class="stat lead"><div class="n">64</div><div class="l">YOUR POINTS</div></div><div class="stat"><div class="n">#6</div><div class="l">RANK</div></div><div class="stat"><div class="n">7</div><div class="l">EXACT</div></div></div>
+        <div class="mc">
+          <div class="stagerow"><span class="stage">ROUND OF 16</span><span class="ko-time">2:13 PM · 1H 5M left</span></div>
+          <div class="teams">
+            <div class="team"><div class="flag">🇵🇹</div><div class="nm">POR</div></div>
+            <div class="center-score"><span class="num">1</span><span class="colon">:</span><span class="num">1</span></div>
+            <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
+          <div class="subhead"><span class="ic">✓</span>PREDICTION SUBMITTED</div>
+          <div class="divider"></div>
+          <div class="pick"><div class="lbl">Your decider call</div><div class="val">Penalties<span class="sub">Portugal to advance</span></div></div>
+          <button class="edit wide">Edit prediction</button>
         </div>
-      </div>
-      <div class="nobonus-only">
-        <div class="statelabel">Decisive — decider skipped</div>
-        <div class="casenote"><b>No state here.</b> No bonus → no optional decider to skip; a decisive prediction is just the scoreline (the card above).</div>
       </div>
 
       <div class="statelabel">Locked — after kick-off</div>
@@ -255,7 +241,8 @@
             <div class="team"><div class="flag">🇫🇷</div><div class="nm">FRA</div></div>
           </div>
           <div class="subhead lock"><span class="ic">🔒</span>PREDICTION LOCKED</div>
-          <div class="bonus-only"><div class="divider"></div><div class="dsum-ft"><span class="em">⏱</span>Portugal win in Extra Time</div></div>
+          <div class="divider"></div>
+          <div class="pick"><div class="lbl">Your decider call</div><div class="val">Full time</div></div>
         </div>
       </div>
     </div>
@@ -263,20 +250,11 @@
   </div>
 
   <div class="legend">
-    <b>How to read this:</b> both options reuse the real phone shell, header, stats and card — only the body changes after submit, and the decider is finally visible (the fix).<br><br>
-    <b>The decider bonus is the merchant’s setting</b> (toggle up top). With a bonus on, the “+N” and the optional Full/Extra-time call appear, and Option A nudges players who skip it. <b>With no bonus, that optional call disappears entirely</b> — it only ever earned the bonus — so a decisive prediction is just the scoreline, and there’s no “+2” anywhere. <i>(The required penalties pick on a draw is unaffected — it decides who advances regardless of bonus.)</i><br><br>
-    <b>Option A</b> adds the skipped-decider nudge (bonus-on only) + a distinct locked state. <b>Option B</b> ships lighter. My vote is <b>A</b> — the nudge recovers bonus points players would otherwise miss, which is the whole reason the decider exists.
+    <b>How to read this:</b> both options reuse the real phone shell, header, stats and card — only the body changes after submit. The fix in both: <b>your pick is always visible</b> — the scoreline plus your decider call (Full time / Extra time / Penalties + who advances), as plain labelled text.<br><br>
+    <b>Option A</b> adds two things: a <b>nudge</b> when the player skipped the optional Full/Extra-time call (recovers the merchant’s bonus — the “+2” shown is whatever the merchant configured; with no bonus the nudge doesn’t appear), and a distinct <b>locked</b> state once the match kicks off. <b>Option B</b> ships lighter — just the pick + Edit.<br><br>
+    My vote is <b>A</b> — the nudge recovers bonus points players would otherwise leave on the table, which is the whole reason the decider exists.
   </div>
 </div>
 
-<script>
-  document.querySelectorAll('.bbtn').forEach(function(b){
-    b.addEventListener('click', function(){
-      document.querySelectorAll('.bbtn').forEach(function(x){x.classList.remove('active')});
-      b.classList.add('active');
-      document.body.classList.toggle('nobonus', b.dataset.mode === 'off');
-    });
-  });
-</script>
 </body>
 </html>
